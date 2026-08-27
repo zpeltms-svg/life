@@ -21,6 +21,8 @@
       "processing_time": "즉시(근무시간 내 3시간 기준)",
       "source_name": "정부24 전입신고",
       "source_url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=13100000016&tp_seq=01",
+      "online_application": {"label": "정부24에서 온라인 신청", "url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=13100000016&tp_seq=01"},
+      "offline_notice": "방문 신청은 새 거주지 주소의 관할 행정복지센터에서만 가능합니다. 가까운 기관이 아닌 관할 기관을 먼저 확인하세요.",
       "source_checked": "2026-08-27",
       "keywords": ["이사", "전입", "주소", "전입신고", "화성으로", "이사왔", "이사 왔"]
     },
@@ -57,6 +59,8 @@
       "processing_time": "공식 안내의 지급일정 확인",
       "source_name": "화성특례시청 출산지원",
       "source_url": "https://www.hscity.go.kr/www/partInfo/femaleFamily/Welfare1/Welfare1_2.jsp",
+      "online_application": {"label": "온라인 신청 안내 확인", "url": "https://www.hscity.go.kr/www/partInfo/femaleFamily/Welfare1/Welfare1_2.jsp"},
+      "offline_notice": "방문 신청은 주소지 관할 행정복지센터에서 가능합니다. 신청 전 관할과 최신 제출서류를 확인하세요.",
       "source_checked": "2026-08-27",
       "keywords": ["출산지원", "출산지원금", "지원금", "아기", "출산", "출생", "행복출산"]
     },
@@ -75,6 +79,7 @@
       "processing_time": "모집 공고별 일정에 따름",
       "source_name": "화성특례시청 청년 일자리 지원",
       "source_url": "https://www.hscity.go.kr/www/partInfo/femaleFamily/Welfare9/Welfare9_5.jsp",
+      "online_application": {"label": "온라인 모집 공고 확인", "url": "https://www.hscity.go.kr/www/partInfo/femaleFamily/Welfare9/Welfare9_5.jsp"},
       "source_checked": "2026-08-27",
       "keywords": ["청년", "취업", "일자리", "인턴", "구직", "공공인턴"]
     },
@@ -93,6 +98,7 @@
       "processing_time": "공고별 일정에 따름",
       "source_name": "화성특례시청 청년 일자리 지원",
       "source_url": "https://www.hscity.go.kr/www/partInfo/femaleFamily/Welfare9/Welfare9_5.jsp",
+      "online_application": {"label": "온라인 모집 공고 확인", "url": "https://www.hscity.go.kr/www/partInfo/femaleFamily/Welfare9/Welfare9_5.jsp"},
       "source_checked": "2026-08-27",
       "keywords": ["청년", "창업", "임차료", "가게", "사업", "청년지원"]
     },
@@ -111,6 +117,7 @@
       "processing_time": "읍·면·동별 수거 일정이 다르므로 수거업체 확인",
       "source_name": "화성특례시 청소행정 포털 대형폐기물배출신청",
       "source_url": "https://h-waste.hscity.go.kr/05_recycle/05_recycle0103.asp",
+      "online_application": {"label": "온라인 배출 신청", "url": "https://h-waste.hscity.go.kr/05_recycle/05_recycle0103.asp"},
       "source_checked": "2026-08-27",
       "keywords": ["소파", "침대", "장롱", "가구", "가전", "냉장고", "대형폐기물", "쓰레기", "버리", "폐기"]
     },
@@ -129,6 +136,7 @@
       "processing_time": "예약 및 진료 일정에 따름",
       "source_name": "화성특례시청 반려동물 진료센터·입양센터 운영 안내",
       "source_url": "https://www.hscity.go.kr/www/user/bbs/BD_selectBbs.do?q_bbsCode=1183&q_bbscttSn=20260520113842852",
+      "visit_destination": {"name": "화성특례시 반려동물 진료센터", "address": "화성시 병점구 효심2나길 6, 2층"},
       "source_checked": "2026-08-27",
       "keywords": ["반려동물", "강아지", "고양이", "동물병원", "진료", "예방접종", "취약계층"]
     }

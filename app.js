@@ -70,6 +70,7 @@ function renderServices(servicesToRender) {
         <span class="badge">${escapeHtml(service.category_label)}</span>
         <h3>${index + 1}. ${escapeHtml(service.title)}</h3>
         <p>${escapeHtml(service.summary)}</p>
+        ${service.online_application ? `<a class="online-link" href="${escapeHtml(service.online_application.url)}" target="_blank" rel="noopener noreferrer">● 온라인 신청 가능 <span>${escapeHtml(service.online_application.label)} ↗</span></a>` : ''}
         <div class="meta-row">
           <span><strong>처리기관</strong> ${escapeHtml(service.office)}</span>
           <span><strong>최근 자료확인</strong> ${escapeHtml(service.source_checked)}</span>
@@ -86,8 +87,23 @@ function openDetail(service) {
   document.querySelector('#detail-title').textContent = service.title;
   const method = (service.method || []).map((x) => `<li>${escapeHtml(x)}</li>`).join('');
   const documents = (service.documents || []).map((x) => `<li>${escapeHtml(x)}</li>`).join('');
+  const online = service.online_application ? `
+    <section class="application-panel online-panel">
+      <p>ONLINE APPLICATION</p>
+      <strong>온라인 신청이 가능합니다.</strong>
+      <a href="${escapeHtml(service.online_application.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(service.online_application.label)} <span>↗</span></a>
+    </section>` : '';
+  const visit = service.visit_destination ? `
+    <section class="application-panel visit-panel" data-service-id="${escapeHtml(service.id)}">
+      <p>OFFLINE VISIT</p>
+      <strong>${escapeHtml(service.visit_destination.name)}</strong>
+      <span>${escapeHtml(service.visit_destination.address)}</span>
+      <button class="route-btn" type="button">현재 위치에서 예상시간 보기</button>
+      <p class="route-status" aria-live="polite"></p>
+    </section>` : service.offline_notice ? `<section class="application-panel jurisdiction-panel"><p>OFFLINE VISIT</p><strong>방문 신청 전 관할 확인이 필요합니다.</strong><span>${escapeHtml(service.offline_notice)}</span></section>` : '';
   document.querySelector('#detail-body').innerHTML = `
     <p>${escapeHtml(service.summary)}</p>
+    <div class="application-actions">${online}${visit}</div>
     <dl class="detail-grid">
       <dt>대상</dt><dd>${escapeHtml(service.who)}</dd>
       <dt>언제</dt><dd>${escapeHtml(service.when)}</dd>
@@ -104,6 +120,39 @@ function openDetail(service) {
     </div>
   `;
   dialog.showModal();
+}
+
+async function showRoute(button) {
+  const panel = button.closest('.visit-panel');
+  const status = panel.querySelector('.route-status');
+  if (!navigator.geolocation) {
+    status.textContent = '이 브라우저에서는 현재 위치를 지원하지 않습니다.';
+    return;
+  }
+  button.disabled = true;
+  button.textContent = '현재 위치 확인 중…';
+  navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+    try {
+      const response = await fetch('/api/route', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ service_id: panel.dataset.serviceId, origin: { latitude: coords.latitude, longitude: coords.longitude } })
+      });
+      const route = await response.json();
+      if (!response.ok) throw new Error(route.error);
+      const minutes = Math.max(1, Math.round(route.duration_ms / 60000));
+      const kilometers = (route.distance_m / 1000).toFixed(1);
+      status.innerHTML = `<strong>자동차 약 ${minutes}분 · ${kilometers}km</strong><a href="nmap://route/car?slat=${coords.latitude}&slng=${coords.longitude}&sname=현재 위치&dlat=${route.latitude}&dlng=${route.longitude}&dname=${encodeURIComponent(route.destination)}&appname=com.hwaseong.life" rel="noopener noreferrer">네이버 지도로 길 안내 ↗</a>`;
+      button.hidden = true;
+    } catch (error) {
+      status.textContent = error.message || '경로 정보를 불러오지 못했습니다.';
+      button.disabled = false;
+      button.textContent = '현재 위치에서 예상시간 보기';
+    }
+  }, () => {
+    status.textContent = '예상시간을 보려면 현재 위치 사용을 허용해 주세요.';
+    button.disabled = false;
+    button.textContent = '현재 위치에서 예상시간 보기';
+  }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 });
 }
 
 function escapeHtml(value = '') {
@@ -145,6 +194,11 @@ list.addEventListener('click', (event) => {
 dialogClose.addEventListener('click', () => dialog.close());
 dialog.addEventListener('click', (event) => {
   if (event.target === dialog) dialog.close();
+});
+
+document.querySelector('#detail-body').addEventListener('click', (event) => {
+  const button = event.target.closest('.route-btn');
+  if (button) showRoute(button);
 });
 
 resetBtn.addEventListener('click', () => {
