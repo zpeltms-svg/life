@@ -74,5 +74,9 @@ class ProjectRegressionTests(unittest.TestCase):
             if path.is_file() and ".git" not in path.parts and path.suffix in {".py", ".js", ".json", ".md", ".html", ".css"}:
                 self.assertIsNone(suspicious.search(path.read_text(encoding="utf-8", errors="ignore")), str(path))
 
+    def test_16_reverse_geocode_uses_administrative_dong(self):
+        source = (ROOT / "api/address.py").read_text(encoding="utf-8")
+        self.assertIn('item.get("name") == "admcode"', source)
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

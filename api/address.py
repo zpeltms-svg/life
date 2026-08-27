@@ -41,9 +41,11 @@ class handler(BaseHTTPRequestHandler):
             results = data.get("results", [])
             if not results:
                 return send_json(self, 422, {"error": "현재 위치의 주소를 찾지 못했습니다."})
-            result = results[0]
-            region, land = result.get("region", {}), result.get("land") or {}
-            area = " ".join(filter(None, [region.get("area2", {}).get("name"), region.get("area3", {}).get("name")]))
+            address_result = next((item for item in results if item.get("name") == "roadaddr"), results[0])
+            admin_result = next((item for item in results if item.get("name") == "admcode"), address_result)
+            region, land = address_result.get("region", {}), address_result.get("land") or {}
+            admin_region = admin_result.get("region", {})
+            area = " ".join(filter(None, [admin_region.get("area2", {}).get("name"), admin_region.get("area3", {}).get("name")]))
             address = " ".join(filter(None, [
                 region.get("area1", {}).get("name"), region.get("area2", {}).get("name"), region.get("area3", {}).get("name"),
                 land.get("name"), land.get("number1"), land.get("number2")
