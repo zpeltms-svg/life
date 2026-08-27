@@ -44,6 +44,13 @@ def get_service(service_id):
     return next((item for item in services if item["id"] == service_id), None)
 
 
+ROUTE_LABELS = {
+    "trafast": "빠른 길",
+    "tracomfort": "편한 길",
+    "traoptimal": "추천 길",
+}
+
+
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
         try:
@@ -57,6 +64,12 @@ class handler(BaseHTTPRequestHandler):
             if not destination:
                 return send_json(self, 422, {"error": "이 서비스는 관할 기관 확인이 먼저 필요합니다."})
 
+            destination_query = str(body.get("destination_query") or "").strip()
+            if destination_query:
+                if len(destination_query) > 120:
+                    return send_json(self, 400, {"error": "목적지 검색어는 120자 이내로 입력해 주세요."})
+                destination = {"name": destination_query, "address": destination_query}
+
             geocode = naver_request(GEOCODE_URL, {"query": destination["address"]})
             addresses = geocode.get("addresses", [])
             if not addresses:
@@ -66,9 +79,22 @@ class handler(BaseHTTPRequestHandler):
             route = naver_request(DIRECTIONS_URL, {
                 "start": f"{longitude},{latitude}",
                 "goal": f"{target_longitude},{target_latitude}",
-                "option": "trafast",
+                "option": "trafast,tracomfort,traoptimal",
             })
-            summary = route.get("route", {}).get("trafast", [{}])[0].get("summary")
+            route_sets = route.get("route", {})
+            routes = []
+            for key in ("trafast", "tracomfort", "traoptimal"):
+                candidate = route_sets.get(key, [{}])[0]
+                summary = candidate.get("summary")
+                if summary:
+                    routes.append({
+                        "key": key,
+                        "label": ROUTE_LABELS[key],
+                        "distance_m": summary["distance"],
+                        "duration_ms": summary["duration"],
+                        "path": candidate.get("path", []),
+                    })
+            summary = routes[0] if routes else None
             if not summary:
                 return send_json(self, 422, {"error": "현재 경로를 찾지 못했습니다."})
             send_json(self, 200, {
@@ -76,9 +102,10 @@ class handler(BaseHTTPRequestHandler):
                 "address": target.get("roadAddress") or destination["address"],
                 "latitude": target_latitude,
                 "longitude": target_longitude,
-                "distance_m": summary["distance"],
-                "duration_ms": summary["duration"],
-                "path": route.get("route", {}).get("trafast", [{}])[0].get("path", []),
+                "distance_m": summary["distance_m"],
+                "duration_ms": summary["duration_ms"],
+                "path": summary["path"],
+                "routes": routes,
                 "map_client_id": os.getenv("NCP_MAPS_CLIENT_ID"),
             })
         except ValueError:

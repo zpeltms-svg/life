@@ -99,6 +99,11 @@ function openDetail(service) {
       <strong>${escapeHtml(service.visit_destination.name)}</strong>
       <span>${escapeHtml(service.visit_destination.address)}</span>
       <button class="route-btn" type="button">현재 위치에서 예상시간 보기</button>
+      <form class="destination-form">
+        <label>다른 장소로 길찾기<input name="destination" maxlength="120" placeholder="주소를 입력하세요 (예: 화성시 동탄대로 635)" autocomplete="street-address"></label>
+        <button type="submit">이 주소 검색</button>
+      </form>
+      <p class="route-helper">주소를 검색하면 현재 위치에서 출발하는 자동차 경로를 지도에 표시합니다.</p>
       <p class="route-status" aria-live="polite"></p>
     </section>` : service.offline_notice ? `<section class="application-panel jurisdiction-panel"><p>OFFLINE VISIT</p><strong>방문 신청 전 관할 확인이 필요합니다.</strong><span>${escapeHtml(service.offline_notice)}</span></section>` : '';
   document.querySelector('#detail-body').innerHTML = `
@@ -122,7 +127,7 @@ function openDetail(service) {
   dialog.showModal();
 }
 
-async function showRoute(button) {
+async function showRoute(button, destinationQuery = '') {
   const panel = button.closest('.visit-panel');
   const status = panel.querySelector('.route-status');
   if (!navigator.geolocation) {
@@ -135,14 +140,23 @@ async function showRoute(button) {
     try {
       const response = await fetch('/api/route', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ service_id: panel.dataset.serviceId, origin: { latitude: coords.latitude, longitude: coords.longitude } })
+        body: JSON.stringify({ service_id: panel.dataset.serviceId, destination_query: destinationQuery, origin: { latitude: coords.latitude, longitude: coords.longitude } })
       });
       const route = await response.json();
       if (!response.ok) throw new Error(route.error);
       const minutes = Math.max(1, Math.round(route.duration_ms / 60000));
       const kilometers = (route.distance_m / 1000).toFixed(1);
+      panel._routeState = { route, origin: coords };
       status.innerHTML = `<strong>자동차 약 ${minutes}분 · ${kilometers}km</strong><a href="nmap://route/car?slat=${coords.latitude}&slng=${coords.longitude}&sname=현재 위치&dlat=${route.latitude}&dlng=${route.longitude}&dname=${encodeURIComponent(route.destination)}&appname=com.hwaseong.life" rel="noopener noreferrer">네이버 지도로 길 안내 ↗</a>`;
       await renderNaverMap(panel, route, coords);
+      if (Array.isArray(route.routes) && route.routes.length > 1) {
+        const options = route.routes.map((item, index) => {
+          const optionMinutes = Math.max(1, Math.round(item.duration_ms / 60000));
+          const optionKilometers = (item.distance_m / 1000).toFixed(1);
+          return `<button class="route-option${index === 0 ? ' is-selected' : ''}" type="button" data-route-key="${item.key}"><b>${item.label}</b><span>약 ${optionMinutes}분 · ${optionKilometers}km</span></button>`;
+        }).join('');
+        status.insertAdjacentHTML('beforeend', `<div class="route-options" aria-label="경로 선택">${options}</div>`);
+      }
       button.hidden = true;
     } catch (error) {
       status.textContent = error.message || '경로 정보를 불러오지 못했습니다.';
@@ -239,6 +253,30 @@ dialog.addEventListener('click', (event) => {
 document.querySelector('#detail-body').addEventListener('click', (event) => {
   const button = event.target.closest('.route-btn');
   if (button) showRoute(button);
+
+  const option = event.target.closest('.route-option');
+  if (!option) return;
+  const panel = option.closest('.visit-panel');
+  const state = panel?._routeState;
+  const selected = state?.route.routes?.find((item) => item.key === option.dataset.routeKey);
+  if (!selected) return;
+  panel.querySelectorAll('.route-option').forEach((item) => item.classList.toggle('is-selected', item === option));
+  const route = { ...state.route, ...selected };
+  const summary = panel.querySelector('.route-status strong');
+  if (summary) summary.textContent = `자동차 약 ${Math.max(1, Math.round(selected.duration_ms / 60000))}분 · ${(selected.distance_m / 1000).toFixed(1)}km`;
+  renderNaverMap(panel, route, state.origin);
+});
+
+document.querySelector('#detail-body').addEventListener('submit', (event) => {
+  const form = event.target.closest('.destination-form');
+  if (!form) return;
+  event.preventDefault();
+  const query = new FormData(form).get('destination')?.trim();
+  if (!query) return;
+  const panel = form.closest('.visit-panel');
+  const button = panel.querySelector('.route-btn');
+  button.hidden = false;
+  showRoute(button, query);
 });
 
 resetBtn.addEventListener('click', () => {
