@@ -7,8 +7,9 @@ from urllib.request import Request, urlopen
 
 
 DATA_PATH = Path(__file__).resolve().parents[1] / "data" / "services.json"
-GEOCODE_URL = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode"
-DIRECTIONS_URL = "https://naveropenapi.apigw.ntruss.com/map-direction/v1/driving"
+# NCP Maps의 현재 VPC API 게이트웨이 주소입니다.
+GEOCODE_URL = "https://maps.apigw.ntruss.com/map-geocode/v2/geocode"
+DIRECTIONS_URL = "https://maps.apigw.ntruss.com/map-direction/v1/driving"
 
 
 def send_json(handler, status, payload):
@@ -21,8 +22,8 @@ def send_json(handler, status, payload):
 
 
 def naver_request(url, params):
-    client_id = os.getenv("NCP_MAPS_CLIENT_ID")
-    client_secret = os.getenv("NCP_MAPS_CLIENT_SECRET")
+    client_id = (os.getenv("NCP_MAPS_CLIENT_ID") or "").strip()
+    client_secret = (os.getenv("NCP_MAPS_CLIENT_SECRET") or "").strip()
     if not client_id or not client_secret:
         raise RuntimeError("네이버 지도 설정이 아직 완료되지 않았습니다.")
     request = Request(
@@ -30,6 +31,7 @@ def naver_request(url, params):
         headers={
             "x-ncp-apigw-api-key-id": client_id,
             "x-ncp-apigw-api-key": client_secret,
+            "Accept": "application/json",
         },
     )
     with urlopen(request, timeout=8) as response:
