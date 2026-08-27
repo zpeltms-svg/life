@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>화성생활 내비 | 나의 생활 파일</title>
+  <meta name="description" content="화성에서의 새로운 생활을 생애주기별 파일로 정리해 드립니다." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar"><div class="shell nav-row"><a class="brand" href="#home" aria-label="화성생활 내비 홈"><span class="brand-mark">H</span>화성생활 내비</a><p class="nav-note">H W A S E O N G &nbsp; L I F E &nbsp; A R C H I V E</p><a class="nav-link" href="#files">생활 파일 둘러보기 <span aria-hidden="true">↘</span></a></div></header>
+  <main id="home">
+    <section class="intro shell" aria-labelledby="hero-title"><p class="kicker">YOUR LIFE, FILED IN HWASEONG</p><h1 id="hero-title">화성에서 시작되는<br><em>당신의 다음 장면.</em></h1><div class="intro-bottom"><p>이사부터 아이의 탄생, 새로운 일까지. 지금의 생활 장면을 고르면<br class="lead-break">필요한 행정과 지원을 한 권의 파일처럼 차분히 정리해 드립니다.</p><a class="round-link" href="#files">내 생활 파일 찾기 <span>↓</span></a></div></section>
+    <section class="archive" id="files" aria-labelledby="archive-title"><div class="shell archive-head"><div><p class="kicker">LIFE MOMENTS / 01—05</p><h2 id="archive-title">오늘, 어떤 이야기를<br>기록할까요?</h2></div><p>파일의 탭을 열어보세요.<br>해당 상황에 맞는 안내를 바로 찾아드립니다.</p></div><div class="file-rail" aria-label="생애주기별 생활 파일">
+      <article class="life-file file-move" data-text="화성으로 이사 왔어요" tabindex="0" role="button"><span class="file-no">01</span><span class="file-icon" aria-hidden="true">⌂</span><div><p>NEW HOME</p><h3>화성으로<br>이사 왔어요</h3><span class="file-arrow">파일 열기 ↗</span></div></article>
+      <article class="life-file file-birth" data-text="아이가 태어났어요" tabindex="0" role="button"><span class="file-no">02</span><span class="file-icon" aria-hidden="true">✳</span><div><p>NEW FAMILY</p><h3>아이가<br>태어났어요</h3><span class="file-arrow">파일 열기 ↗</span></div></article>
+      <article class="life-file file-youth" data-text="화성에서 취업이나 창업을 준비해요" tabindex="0" role="button"><span class="file-no">03</span><span class="file-icon" aria-hidden="true">↗</span><div><p>NEW WORK</p><h3>새로운 일을<br>시작해요</h3><span class="file-arrow">파일 열기 ↗</span></div></article>
+      <article class="life-file file-waste" data-text="이사하며 큰 가구를 버리려고 해요" tabindex="0" role="button"><span class="file-no">04</span><span class="file-icon" aria-hidden="true">⌑</span><div><p>DAILY LIFE</p><h3>생활을<br>정리해요</h3><span class="file-arrow">파일 열기 ↗</span></div></article>
+      <article class="life-file file-pet" data-text="반려동물과 화성에서 살고 있어요" tabindex="0" role="button"><span class="file-no">05</span><span class="file-icon" aria-hidden="true">♡</span><div><p>WITH PET</p><h3>반려동물과<br>함께해요</h3><span class="file-arrow">파일 열기 ↗</span></div></article>
+    </div></section>
+    <section class="finder shell" aria-labelledby="finder-title"><div class="finder-title"><p class="kicker">OR, TELL US IN YOUR WORDS</p><h2 id="finder-title">상황을 직접<br>들려주세요.</h2></div><form id="guide-form" class="search-card"><label for="situation">지금 필요한 도움을 한 문장으로 적어주세요.</label><textarea id="situation" name="situation" rows="3" placeholder="예: 화성으로 이사 왔고, 초등학생 아이가 있어요" maxlength="300" required></textarea><div class="quick-wrap" aria-label="추천 문장"><p>바로 시작하기</p><div class="chips"><button type="button" class="chip" data-text="화성으로 이사 왔어요">화성으로 이사 왔어요</button><button type="button" class="chip" data-text="아이가 태어났어요">아이가 태어났어요</button><button type="button" class="chip" data-text="화성에서 취업을 준비해요">새 일자리가 필요해요</button></div></div><button id="submit-btn" class="primary" type="submit">내 파일 만들기 <span>↗</span></button><p class="privacy-note">입력한 문장은 이 화면의 안내를 위해서만 사용되며 별도로 저장하지 않습니다.</p></form></section>
+    <section id="results" class="results shell" hidden aria-live="polite"><div class="section-head"><div><p class="kicker">YOUR SELECTED FILE</p><h2 id="result-title">이 상황에서 챙길 파일</h2></div><button id="reset-btn" type="button" class="secondary">다른 상황 찾기</button></div><div id="analysis-note" class="analysis-note"></div><div id="result-list" class="card-list"></div><div id="no-result" class="empty" hidden><strong>등록된 공식 자료에서 맞는 파일을 찾지 못했어요.</strong><p>표현을 조금 바꾸어 다시 입력하거나 화성시 공식 안내에서 확인해 주세요.</p></div></section>
+    <section class="principles shell"><p class="kicker">HOW WE KEEP YOUR FILE USEFUL</p><div class="principles-grid"><h2>복잡한 행정은<br>간결한 순서로.</h2><p><b>01 / 상황부터</b>서비스 이름이 아닌 당신의 생활 장면에서 출발합니다.</p><p><b>02 / 공식 정보만</b>정부24와 화성특례시의 공식 안내를 바탕으로 정리합니다.</p><p><b>03 / 확인은 항상</b>신청 전 최신 공고와 조건을 한 번 더 확인할 수 있게 합니다.</p></div></section>
+  </main>
+  <dialog id="detail-dialog" class="detail-dialog"><div class="dialog-head"><div><span id="detail-category" class="badge"></span><h2 id="detail-title"></h2></div><button type="button" id="detail-close" class="icon-btn" aria-label="닫기">×</button></div><div id="detail-body"></div></dialog>
+  <footer><div class="shell"><p><strong>화성생활 내비</strong> — 화성시민 체험판(MVP)</p><p>행정정보는 변경될 수 있으므로 실제 신청 전 공식 출처의 최신 내용을 확인해 주세요.</p></div></footer><script src="app.js" defer></script>
+</body></html>
