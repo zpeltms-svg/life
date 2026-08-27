@@ -12,6 +12,7 @@ class ProjectRegressionTests(unittest.TestCase):
         cls.centers = json.loads((ROOT / "data/welfare-centers.json").read_text(encoding="utf-8"))["centers"]
         cls.app = (ROOT / "app.js").read_text(encoding="utf-8")
         cls.route = (ROOT / "api/route.py").read_text(encoding="utf-8")
+        cls.public_services = (ROOT / "api/public_services.py").read_text(encoding="utf-8")
         cls.vercel = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
 
     def test_01_services_exist(self):
@@ -66,7 +67,7 @@ class ProjectRegressionTests(unittest.TestCase):
 
     def test_14_all_api_rewrites_exist(self):
         sources = {item["source"] for item in self.vercel["rewrites"]}
-        self.assertTrue({"/api/guide", "/api/route", "/api/address", "/api/map-config"}.issubset(sources))
+        self.assertTrue({"/api/guide", "/api/public-services", "/api/route", "/api/address", "/api/map-config"}.issubset(sources))
 
     def test_15_no_plaintext_secret_in_tracked_sources(self):
         suspicious = re.compile(r"(?:CLIENT_SECRET|SERVICE_KEY)\s*[=:]\s*['\"]?[A-Za-z0-9_-]{16,}")
@@ -77,6 +78,18 @@ class ProjectRegressionTests(unittest.TestCase):
     def test_16_reverse_geocode_uses_administrative_dong(self):
         source = (ROOT / "api/address.py").read_text(encoding="utf-8")
         self.assertIn('item.get("name") == "admcode"', source)
+
+    def test_17_public_data_key_stays_server_side(self):
+        self.assertIn('os.getenv("PUBLIC_DATA_SERVICE_KEY"', self.public_services)
+        self.assertNotIn("PUBLIC_DATA_SERVICE_KEY", self.app)
+
+    def test_18_disability_keyword_maps_to_public_audience(self):
+        self.assertIn('"장애인": "장애인"', self.public_services)
+        self.assertIn('("사용자구분", term)', self.public_services)
+
+    def test_19_public_results_are_merged_in_browser(self):
+        self.assertIn("publicDataRetrieve(query)", self.app)
+        self.assertIn("mergeUniqueServices(localFound, publicFound)", self.app)
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

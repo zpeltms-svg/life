@@ -25,6 +25,9 @@ Vercel 배포 후 프로젝트 Environment Variables에 아래 값을 등록합�
 
 - `OPENAI_API_KEY`: 본인의 OpenAI API Key
 - `OPENAI_MODEL`: 선택사항 (기본값 `gpt-4.1-mini`)
+- `PUBLIC_DATA_SERVICE_KEY`: 공공데이터포털의 `행정안전부_대한민국 공공서비스(혜택) 정보` 일반 인증키
+
+`PUBLIC_DATA_SERVICE_KEY`가 설정되면 입력 키워드를 정부24 공공서비스 목록의 서비스명과 사용자구분에서 서버 측으로 검색합니다. 키는 브라우저로 전달되지 않습니다.
 
 API 키는 브라우저 코드에 넣지 마세요.
 

@@ -66,6 +66,33 @@ async function aiRetrieve(query) {
   }
 }
 
+async function publicDataRetrieve(query) {
+  try {
+    const response = await fetch('/api/public-services', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query })
+    });
+    if (!response.ok) throw new Error('Public data API not available');
+    const data = await response.json();
+    return {
+      services: Array.isArray(data.services) ? data.services : [],
+      configured: data.configured !== false,
+      note: data.note || ''
+    };
+  } catch (_) {
+    return { services: [], configured: false, note: '' };
+  }
+}
+
+function mergeUniqueServices(...groups) {
+  const merged = new Map();
+  groups.flat().forEach((service) => {
+    if (service?.id && !merged.has(service.id)) merged.set(service.id, service);
+  });
+  return [...merged.values()].slice(0, 8);
+}
+
 function renderServices(servicesToRender) {
   list.innerHTML = '';
   noResult.hidden = servicesToRender.length > 0;
@@ -451,16 +478,28 @@ form.addEventListener('submit', async (event) => {
   submitBtn.disabled = true;
   submitBtn.textContent = '찾는 중…';
 
-  const aiResult = await aiRetrieve(query);
-  let found;
+  const [aiResult, publicResult] = await Promise.all([
+    aiRetrieve(query),
+    publicDataRetrieve(query)
+  ]);
+  let localFound;
   if (aiResult && aiResult.services.length) {
-    found = aiResult.services;
-    analysisNote.textContent = aiResult.note;
+    localFound = aiResult.services;
   } else {
-    found = localRetrieve(query);
-    analysisNote.textContent = found.length
-      ? '입력한 문장에서 관련 생활상황을 찾아 공식자료에 등록된 서비스를 우선 안내합니다.'
-      : '등록된 자료 범위에서 관련 서비스를 찾지 못했습니다.';
+    localFound = localRetrieve(query);
+  }
+
+  const publicFound = publicResult.services || [];
+  publicFound.forEach((service) => {
+    if (!serviceData.some((item) => item.id === service.id)) serviceData.push(service);
+  });
+  const found = mergeUniqueServices(localFound, publicFound);
+  if (publicFound.length) {
+    analysisNote.textContent = `공공데이터포털에서 관련 서비스 ${publicFound.length}건을 찾아 등록된 생활 파일과 함께 안내합니다.`;
+  } else if (localFound.length) {
+    analysisNote.textContent = publicResult.note || aiResult?.note || '입력한 문장에서 관련 생활상황을 찾아 등록된 서비스를 안내합니다.';
+  } else {
+    analysisNote.textContent = publicResult.note || '공공데이터와 등록된 자료에서 관련 서비스를 찾지 못했습니다. 검색어를 조금 바꾸어 입력해 주세요.';
   }
 
   renderServices(found);
