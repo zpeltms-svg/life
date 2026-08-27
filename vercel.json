@@ -1,6 +1,7 @@
 {
   "rewrites": [
     { "source": "/api/guide", "destination": "/api/guide.py" },
-    { "source": "/api/route", "destination": "/api/route.py" }
+    { "source": "/api/route", "destination": "/api/route.py" },
+    { "source": "/api/address", "destination": "/api/address.py" }
   ]
 }

@@ -10,6 +10,7 @@ const dialog = document.querySelector('#detail-dialog');
 const dialogClose = document.querySelector('#detail-close');
 
 let serviceData = [];
+const welfareAreas = ['봉담읍', '우정읍', '향남읍', '남양읍', '매송면', '비봉면', '마도면', '송산면', '서신면', '팔탄면', '장안면', '양감면', '정남면', '새솔동', '진안동', '병점1동', '병점2동', '반월동', '기배동', '화산동', '동탄1동', '동탄2동', '동탄3동', '동탄4동', '동탄5동', '동탄6동', '동탄7동', '동탄8동', '동탄9동'];
 
 async function loadServices() {
   const response = await fetch('./data/services.json', { cache: 'no-store' });
@@ -87,6 +88,18 @@ function openDetail(service) {
   document.querySelector('#detail-title').textContent = service.title;
   const method = (service.method || []).map((x) => `<li>${escapeHtml(x)}</li>`).join('');
   const documents = (service.documents || []).map((x) => `<li>${escapeHtml(x)}</li>`).join('');
+  const welfareCenterOnly = (service.office || '').includes('행정복지센터') && !service.visit_destination;
+  const welfareCenter = welfareCenterOnly ? `
+    <section class="application-panel jurisdiction-panel welfare-center-panel" data-service-id="${escapeHtml(service.id)}">
+      <p>JURISDICTION OFFICE</p>
+      <strong>주소지 관할 행정복지센터를 선택해 주세요.</strong>
+      <label>현재 주소<input class="current-address" name="current-address" placeholder="현재 위치로 주소를 불러오거나 직접 입력" autocomplete="street-address"></label>
+      <button class="current-address-btn" type="button">현재 위치로 주소 설정</button>
+      <label>화성시 읍·면·동<select class="welfare-area-select"><option value="">관할 읍·면·동 선택</option>${welfareAreas.map((area) => `<option value="${area}">${area}</option>`).join('')}</select></label>
+      <button class="welfare-route-btn" type="button">선택한 관할 센터 길찾기</button>
+      <small>접수 가능 관할은 실제 신청 전 공식 안내에서 다시 확인해 주세요.</small>
+      <p class="route-status" aria-live="polite"></p>
+    </section>` : '';
   const online = service.online_application ? `
     <section class="application-panel online-panel">
       <p>ONLINE APPLICATION</p>
@@ -108,7 +121,7 @@ function openDetail(service) {
     </section>` : service.offline_notice ? `<section class="application-panel jurisdiction-panel"><p>OFFLINE VISIT</p><strong>방문 신청 전 관할 확인이 필요합니다.</strong><span>${escapeHtml(service.offline_notice)}</span></section>` : '';
   document.querySelector('#detail-body').innerHTML = `
     <p>${escapeHtml(service.summary)}</p>
-    <div class="application-actions">${online}${visit}</div>
+    <div class="application-actions">${online}${visit}${welfareCenter}</div>
     <dl class="detail-grid">
       <dt>대상</dt><dd>${escapeHtml(service.who)}</dd>
       <dt>언제</dt><dd>${escapeHtml(service.when)}</dd>
@@ -128,7 +141,7 @@ function openDetail(service) {
 }
 
 async function showRoute(button, destinationQuery = '') {
-  const panel = button.closest('.visit-panel');
+  const panel = button.closest('.visit-panel, .welfare-center-panel');
   const status = panel.querySelector('.route-status');
   if (!navigator.geolocation) {
     status.textContent = '이 브라우저에서는 현재 위치를 지원하지 않습니다.';
@@ -215,6 +228,41 @@ function escapeHtml(value = '') {
   })[char]);
 }
 
+async function setCurrentAddress(button) {
+  const panel = button.closest('.welfare-center-panel');
+  const input = panel.querySelector('.current-address');
+  const status = panel.querySelector('.route-status');
+  if (!navigator.geolocation) {
+    status.textContent = '이 브라우저에서는 현재 위치를 사용할 수 없습니다.';
+    return;
+  }
+  button.disabled = true;
+  button.textContent = '현재 위치 확인 중…';
+  navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+    try {
+      const response = await fetch('/api/address', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ latitude: coords.latitude, longitude: coords.longitude })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
+      input.value = data.address;
+      const area = welfareAreas.find((item) => data.area?.includes(item));
+      if (area) panel.querySelector('.welfare-area-select').value = area;
+      status.textContent = area ? `${area} 관할로 선택했습니다.` : '주소를 불러왔습니다. 관할 읍·면·동을 선택해 주세요.';
+    } catch (error) {
+      status.textContent = error.message || '현재 위치 주소를 불러오지 못했습니다.';
+    } finally {
+      button.disabled = false;
+      button.textContent = '현재 위치로 주소 설정';
+    }
+  }, () => {
+    status.textContent = '주소를 채우려면 현재 위치 사용을 허용해 주세요.';
+    button.disabled = false;
+    button.textContent = '현재 위치로 주소 설정';
+  }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 });
+}
+
 document.querySelectorAll('.chip').forEach((button) => {
   button.addEventListener('click', () => {
     textarea.value = button.dataset.text || '';
@@ -253,6 +301,20 @@ dialog.addEventListener('click', (event) => {
 document.querySelector('#detail-body').addEventListener('click', (event) => {
   const button = event.target.closest('.route-btn');
   if (button) showRoute(button);
+
+  const welfareButton = event.target.closest('.welfare-route-btn');
+  if (welfareButton) {
+    const panel = welfareButton.closest('.welfare-center-panel');
+    const area = panel.querySelector('.welfare-area-select').value;
+    if (!area) {
+      panel.querySelector('.route-status').textContent = '먼저 주소지 관할 읍·면·동을 선택해 주세요.';
+    } else {
+      showRoute(welfareButton, `화성시 ${area} 행정복지센터`);
+    }
+  }
+
+  const currentAddressButton = event.target.closest('.current-address-btn');
+  if (currentAddressButton) setCurrentAddress(currentAddressButton);
 
   const option = event.target.closest('.route-option');
   if (!option) return;
