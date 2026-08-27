@@ -61,7 +61,7 @@ class handler(BaseHTTPRequestHandler):
             latitude = float(origin.get("latitude"))
             longitude = float(origin.get("longitude"))
             destination = service.get("visit_destination") if service else None
-            if not destination:
+            if not destination and not str(body.get("destination_query") or "").strip():
                 return send_json(self, 422, {"error": "이 서비스는 관할 기관 확인이 먼저 필요합니다."})
 
             destination_query = str(body.get("destination_query") or "").strip()
