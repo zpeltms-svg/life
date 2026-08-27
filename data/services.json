@@ -8,6 +8,7 @@
   "services": [
     {
       "id": "MOVE-001",
+      "office_mode": "jurisdiction",
       "category": "move",
       "category_label": "전입·이사",
       "title": "전입신고",
@@ -28,6 +29,7 @@
     },
     {
       "id": "BIRTH-001",
+      "office_mode": "nationwide_nearest",
       "category": "birth",
       "category_label": "출산·육아",
       "title": "출생신고",
@@ -46,6 +48,7 @@
     },
     {
       "id": "BIRTH-002",
+      "office_mode": "jurisdiction",
       "category": "birth",
       "category_label": "출산·육아",
       "title": "화성시 출산지원금",

@@ -54,3 +54,14 @@ API 키는 브라우저 코드에 넣지 마세요.
 
 ## 주의
 이 프로젝트는 교육·체험용 MVP입니다. 실제 행정신청 전에는 화면의 '공식 원문 열기'에서 최신 내용을 다시 확인하도록 안내해야 합니다.
+
+## 네이버 지도 기능
+
+Vercel Production 환경변수에 다음 값을 Secret으로 등록합니다.
+
+- `NCP_MAPS_CLIENT_ID`: Naver Cloud Maps Client ID
+- `NCP_MAPS_CLIENT_SECRET`: Naver Cloud Maps Client Secret
+
+Naver Cloud Maps Application에서 Web Dynamic Map, Geocoding, Reverse Geocoding, Directions 5를 활성화해야 합니다. Secret은 브라우저 코드나 Git 저장소에 입력하지 않습니다.
+
+행정복지센터 길찾기는 `data/welfare-centers.json`의 화성시 공식 주소 목록을 사용합니다. `office_mode`가 `jurisdiction`이면 주소지 관할 센터를 선택하고, `nationwide_nearest`이면 현재 위치와 센터 좌표를 비교해 가장 가까운 센터를 안내합니다.

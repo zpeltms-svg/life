@@ -10,13 +10,19 @@ const dialog = document.querySelector('#detail-dialog');
 const dialogClose = document.querySelector('#detail-close');
 
 let serviceData = [];
+let welfareCenters = [];
 const welfareAreas = ['봉담읍', '우정읍', '향남읍', '남양읍', '매송면', '비봉면', '마도면', '송산면', '서신면', '팔탄면', '장안면', '양감면', '정남면', '새솔동', '진안동', '병점1동', '병점2동', '반월동', '기배동', '화산동', '동탄1동', '동탄2동', '동탄3동', '동탄4동', '동탄5동', '동탄6동', '동탄7동', '동탄8동', '동탄9동'];
 
 async function loadServices() {
   const response = await fetch('./data/services.json', { cache: 'no-store' });
+  const centerResponse = await fetch('./data/welfare-centers.json', { cache: 'no-store' });
   if (!response.ok) throw new Error('행정서비스 자료를 불러오지 못했습니다.');
   const data = await response.json();
   serviceData = data.services || [];
+  if (centerResponse.ok) {
+    const centerData = await centerResponse.json();
+    welfareCenters = centerData.centers || [];
+  }
 }
 
 function localRetrieve(query) {
@@ -89,7 +95,9 @@ function openDetail(service) {
   const method = (service.method || []).map((x) => `<li>${escapeHtml(x)}</li>`).join('');
   const documents = (service.documents || []).map((x) => `<li>${escapeHtml(x)}</li>`).join('');
   const welfareCenterOnly = (service.office || '').includes('행정복지센터') && !service.visit_destination;
-  const welfareCenter = welfareCenterOnly ? `
+  const isJurisdictionOffice = service.office_mode === 'jurisdiction';
+  const isNationwideOffice = service.office_mode === 'nationwide_nearest';
+  const welfareCenter = isJurisdictionOffice ? `
     <section class="application-panel jurisdiction-panel welfare-center-panel" data-service-id="${escapeHtml(service.id)}">
       <p>JURISDICTION OFFICE</p>
       <strong>주소지 관할 행정복지센터를 선택해 주세요.</strong>
@@ -98,6 +106,14 @@ function openDetail(service) {
       <label>화성시 읍·면·동<select class="welfare-area-select"><option value="">관할 읍·면·동 선택</option>${welfareAreas.map((area) => `<option value="${area}">${area}</option>`).join('')}</select></label>
       <button class="welfare-route-btn" type="button">선택한 관할 센터 길찾기</button>
       <small>접수 가능 관할은 실제 신청 전 공식 안내에서 다시 확인해 주세요.</small>
+      <p class="route-status" aria-live="polite"></p>
+    </section>` : '';
+  const nearestCenter = isNationwideOffice ? `
+    <section class="application-panel visit-panel nearest-center-panel" data-service-id="${escapeHtml(service.id)}">
+      <p>NATIONWIDE OFFICE</p>
+      <strong>전국 읍·면·동에서 접수할 수 있습니다.</strong>
+      <span>현재 위치에서 가장 가까운 화성시 행정복지센터를 찾아 길을 안내합니다.</span>
+      <button class="nearest-center-btn" type="button">가장 가까운 센터와 예상시간 보기</button>
       <p class="route-status" aria-live="polite"></p>
     </section>` : '';
   const online = service.online_application ? `
@@ -122,7 +138,7 @@ function openDetail(service) {
     </section>` : service.offline_notice ? `<section class="application-panel jurisdiction-panel"><p>OFFLINE VISIT</p><strong>방문 신청 전 관할 확인이 필요합니다.</strong><span>${escapeHtml(service.offline_notice)}</span></section>` : '';
   document.querySelector('#detail-body').innerHTML = `
     <p>${escapeHtml(service.summary)}</p>
-    <div class="application-actions">${online}${visit}${welfareCenter}</div>
+    <div class="application-actions">${online}${visit}${welfareCenter}${nearestCenter}</div>
     <dl class="detail-grid">
       <dt>대상</dt><dd>${escapeHtml(service.who)}</dd>
       <dt>언제</dt><dd>${escapeHtml(service.when)}</dd>
@@ -194,7 +210,7 @@ function loadNaverMaps(clientId) {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
     script.id = 'naver-maps-sdk';
-    script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${encodeURIComponent(clientId)}`;
+    script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${encodeURIComponent(clientId)}&submodules=geocoder`;
     script.onload = resolve;
     script.onerror = reject;
     document.head.appendChild(script);
@@ -227,6 +243,75 @@ function escapeHtml(value = '') {
   return String(value).replace(/[&<>'"]/g, (char) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
   })[char]);
+}
+
+function getCurrentPosition() {
+  return new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject, {
+    enableHighAccuracy: false, timeout: 10000, maximumAge: 60000
+  }));
+}
+
+function distanceBetween(origin, target) {
+  const toRadians = (value) => value * Math.PI / 180;
+  const earthRadius = 6371000;
+  const latDelta = toRadians(target.latitude - origin.latitude);
+  const lngDelta = toRadians(target.longitude - origin.longitude);
+  const a = Math.sin(latDelta / 2) ** 2 + Math.cos(toRadians(origin.latitude)) * Math.cos(toRadians(target.latitude)) * Math.sin(lngDelta / 2) ** 2;
+  return earthRadius * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+async function getMapClientId() {
+  const response = await fetch('/api/map-config');
+  const data = await response.json();
+  if (!response.ok || !data.client_id) throw new Error(data.error || '네이버 지도 설정을 확인해 주세요.');
+  return data.client_id;
+}
+
+function geocodeWithNaver(address) {
+  return new Promise((resolve) => {
+    window.naver.maps.Service.geocode({ query: address }, (status, response) => {
+      const item = status === window.naver.maps.Service.Status.OK ? response.v2?.addresses?.[0] : null;
+      resolve(item ? { longitude: Number(item.x), latitude: Number(item.y) } : null);
+    });
+  });
+}
+
+async function findNearestWelfareCenter(button) {
+  const panel = button.closest('.nearest-center-panel');
+  const status = panel.querySelector('.route-status');
+  if (!navigator.geolocation) {
+    status.textContent = '이 브라우저에서는 현재 위치를 사용할 수 없습니다.';
+    return;
+  }
+  button.disabled = true;
+  button.textContent = '가까운 센터 확인 중…';
+  try {
+    const [{ coords }, clientId] = await Promise.all([getCurrentPosition(), getMapClientId()]);
+    await loadNaverMaps(clientId);
+    const cacheKey = 'hwaseong-welfare-centers-v1';
+    let positioned = [];
+    try { positioned = JSON.parse(localStorage.getItem(cacheKey) || '[]'); } catch (_) { positioned = []; }
+    if (positioned.length !== welfareCenters.length) {
+      positioned = (await Promise.all(welfareCenters.map(async (center) => {
+        const point = await geocodeWithNaver(center.address);
+        return point ? { ...center, ...point } : null;
+      }))).filter(Boolean);
+      if (positioned.length) localStorage.setItem(cacheKey, JSON.stringify(positioned));
+    }
+    if (!positioned.length) throw new Error('행정복지센터 위치를 불러오지 못했습니다.');
+    const nearest = positioned.reduce((best, center) => {
+      const distance = distanceBetween(coords, center);
+      return !best || distance < best.distance ? { ...center, distance } : best;
+    }, null);
+    status.textContent = `${nearest.name}을 가장 가까운 센터로 찾았습니다.`;
+    button.textContent = `${nearest.name} 길찾기`;
+    button.disabled = false;
+    showRoute(button, nearest.address);
+  } catch (error) {
+    status.textContent = error.message || '가까운 행정복지센터를 찾지 못했습니다.';
+    button.disabled = false;
+    button.textContent = '가장 가까운 센터와 예상시간 보기';
+  }
 }
 
 async function setCurrentAddress(button) {
@@ -310,12 +395,17 @@ document.querySelector('#detail-body').addEventListener('click', (event) => {
     if (!area) {
       panel.querySelector('.route-status').textContent = '먼저 주소지 관할 읍·면·동을 선택해 주세요.';
     } else {
-      showRoute(welfareButton, `화성시 ${area} 행정복지센터`);
+      const center = welfareCenters.find((item) => item.area === area);
+      if (center) showRoute(welfareButton, center.address);
+      else panel.querySelector('.route-status').textContent = '선택한 관할 센터 주소를 찾지 못했습니다.';
     }
   }
 
   const currentAddressButton = event.target.closest('.current-address-btn');
   if (currentAddressButton) setCurrentAddress(currentAddressButton);
+
+  const nearestCenterButton = event.target.closest('.nearest-center-btn');
+  if (nearestCenterButton) findNearestWelfareCenter(nearestCenterButton);
 
   const option = event.target.closest('.route-option');
   if (!option) return;
@@ -338,7 +428,8 @@ document.querySelector('#detail-body').addEventListener('submit', (event) => {
   if (!query) return;
   const normalized = query.replace(/\s+/g, '');
   const area = welfareAreas.find((item) => item.replace(/\s+/g, '').startsWith(normalized) || item.replace(/\s+/g, '').includes(normalized));
-  const destination = area ? `화성시 ${area} 행정복지센터` : query;
+  const center = area ? welfareCenters.find((item) => item.area === area) : null;
+  const destination = center ? center.address : query;
   if (area) form.querySelector('.area-search').value = area;
   const panel = form.closest('.visit-panel');
   const button = panel.querySelector('.route-btn');
