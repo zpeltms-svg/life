@@ -76,6 +76,8 @@ class handler(BaseHTTPRequestHandler):
                 "longitude": target_longitude,
                 "distance_m": summary["distance"],
                 "duration_ms": summary["duration"],
+                "path": route.get("route", {}).get("trafast", [{}])[0].get("path", []),
+                "map_client_id": os.getenv("NCP_MAPS_CLIENT_ID"),
             })
         except ValueError:
             send_json(self, 400, {"error": "현재 위치 정보를 확인할 수 없습니다."})

@@ -142,6 +142,7 @@ async function showRoute(button) {
       const minutes = Math.max(1, Math.round(route.duration_ms / 60000));
       const kilometers = (route.distance_m / 1000).toFixed(1);
       status.innerHTML = `<strong>자동차 약 ${minutes}분 · ${kilometers}km</strong><a href="nmap://route/car?slat=${coords.latitude}&slng=${coords.longitude}&sname=현재 위치&dlat=${route.latitude}&dlng=${route.longitude}&dname=${encodeURIComponent(route.destination)}&appname=com.hwaseong.life" rel="noopener noreferrer">네이버 지도로 길 안내 ↗</a>`;
+      await renderNaverMap(panel, route, coords);
       button.hidden = true;
     } catch (error) {
       status.textContent = error.message || '경로 정보를 불러오지 못했습니다.';
@@ -153,6 +154,45 @@ async function showRoute(button) {
     button.disabled = false;
     button.textContent = '현재 위치에서 예상시간 보기';
   }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 });
+}
+
+function loadNaverMaps(clientId) {
+  if (window.naver?.maps) return Promise.resolve();
+  const existing = document.querySelector('#naver-maps-sdk');
+  if (existing) return new Promise((resolve, reject) => {
+    existing.addEventListener('load', resolve, { once: true });
+    existing.addEventListener('error', reject, { once: true });
+  });
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.id = 'naver-maps-sdk';
+    script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${encodeURIComponent(clientId)}`;
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
+
+async function renderNaverMap(panel, route, origin) {
+  if (!route.map_client_id || !Array.isArray(route.path) || !route.path.length) return;
+  try {
+    await loadNaverMaps(route.map_client_id);
+    const oldMap = panel.querySelector('.naver-route-map');
+    if (oldMap) oldMap.remove();
+    const mapElement = document.createElement('div');
+    mapElement.className = 'naver-route-map';
+    panel.appendChild(mapElement);
+    const path = route.path.map(([longitude, latitude]) => new window.naver.maps.LatLng(latitude, longitude));
+    const map = new window.naver.maps.Map(mapElement, { center: path[Math.floor(path.length / 2)], zoom: 13 });
+    new window.naver.maps.Polyline({ map, path, strokeColor: '#2675d9', strokeWeight: 5, strokeOpacity: 0.85 });
+    new window.naver.maps.Marker({ map, position: new window.naver.maps.LatLng(origin.latitude, origin.longitude), title: '현재 위치' });
+    new window.naver.maps.Marker({ map, position: new window.naver.maps.LatLng(route.latitude, route.longitude), title: route.destination });
+    const bounds = new window.naver.maps.LatLngBounds();
+    path.forEach((position) => bounds.extend(position));
+    map.fitBounds(bounds, { top: 26, right: 26, bottom: 26, left: 26 });
+  } catch (_) {
+    // 지도 SDK가 허용 도메인 또는 설정 문제로 로드되지 않아도 길 안내 링크는 유지합니다.
+  }
 }
 
 function escapeHtml(value = '') {
