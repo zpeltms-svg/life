@@ -113,10 +113,11 @@ function openDetail(service) {
       <span>${escapeHtml(service.visit_destination.address)}</span>
       <button class="route-btn" type="button">현재 위치에서 예상시간 보기</button>
       <form class="destination-form">
-        <label>다른 장소로 길찾기<input name="destination" maxlength="120" placeholder="주소를 입력하세요 (예: 화성시 동탄대로 635)" autocomplete="street-address"></label>
-        <button type="submit">이 주소 검색</button>
+        <label>다른 장소 또는 화성시 읍·면·동 검색<input name="destination" class="area-search" list="welfare-area-options" maxlength="120" placeholder="예: 향 → 향남읍, 동탄7동, 화성시 동탄대로 635" autocomplete="street-address"></label>
+        <datalist id="welfare-area-options">${welfareAreas.map((area) => `<option value="${area}"></option>`).join('')}</datalist>
+        <button type="submit">목적지 선택</button>
       </form>
-      <p class="route-helper">주소를 검색하면 현재 위치에서 출발하는 자동차 경로를 지도에 표시합니다.</p>
+      <p class="route-helper">읍·면·동 이름 일부만 입력해도 일치하는 행정복지센터를 선택합니다. 주소를 입력하면 해당 주소로 길찾기합니다.</p>
       <p class="route-status" aria-live="polite"></p>
     </section>` : service.offline_notice ? `<section class="application-panel jurisdiction-panel"><p>OFFLINE VISIT</p><strong>방문 신청 전 관할 확인이 필요합니다.</strong><span>${escapeHtml(service.offline_notice)}</span></section>` : '';
   document.querySelector('#detail-body').innerHTML = `
@@ -335,10 +336,14 @@ document.querySelector('#detail-body').addEventListener('submit', (event) => {
   event.preventDefault();
   const query = new FormData(form).get('destination')?.trim();
   if (!query) return;
+  const normalized = query.replace(/\s+/g, '');
+  const area = welfareAreas.find((item) => item.replace(/\s+/g, '').startsWith(normalized) || item.replace(/\s+/g, '').includes(normalized));
+  const destination = area ? `화성시 ${area} 행정복지센터` : query;
+  if (area) form.querySelector('.area-search').value = area;
   const panel = form.closest('.visit-panel');
   const button = panel.querySelector('.route-btn');
   button.hidden = false;
-  showRoute(button, query);
+  showRoute(button, destination);
 });
 
 resetBtn.addEventListener('click', () => {

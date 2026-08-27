@@ -79,7 +79,7 @@ class handler(BaseHTTPRequestHandler):
             route = naver_request(DIRECTIONS_URL, {
                 "start": f"{longitude},{latitude}",
                 "goal": f"{target_longitude},{target_latitude}",
-                "option": "trafast,tracomfort,traoptimal",
+                "option": "trafast",
             })
             route_sets = route.get("route", {})
             routes = []
