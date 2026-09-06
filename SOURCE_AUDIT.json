@@ -1,0 +1,391 @@
+{
+  "checked_at": "2026-09-07",
+  "scope": "HTTP 접속 확인은 행정내용 전체의 검증과 다릅니다. 새 출산서비스 3개, 출산지원금, 구 분류, 29개 센터 위치는 공식 본문을 직접 대조했습니다. 기존 서비스 상세는 제공 자료를 보존하고 공식 링크를 연결합니다.",
+  "service_sources": [
+    {
+      "id": "MOVE-001",
+      "url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=13100000016&tp_seq=01",
+      "bytes": 220799,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "BIRTH-001",
+      "url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=12700000045&HighCtgCD=A01008",
+      "bytes": 219270,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "BIRTH-002",
+      "url": "https://www.hscity.go.kr/www/partInfo/femaleFamily/Welfare1/Welfare1_2.jsp",
+      "bytes": 555704,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "YOUTH-001",
+      "url": "https://www.hscity.go.kr/www/partInfo/femaleFamily/Welfare9/Welfare9_5.jsp",
+      "bytes": 521935,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "YOUTH-002",
+      "url": "https://www.hscity.go.kr/www/partInfo/femaleFamily/Welfare9/Welfare9_5.jsp",
+      "bytes": 521935,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "WASTE-001",
+      "url": "https://h-waste.hscity.go.kr/05_recycle/05_recycle0103.asp",
+      "bytes": 20171,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "PET-001",
+      "url": "https://www.hscity.go.kr/www/user/bbs/BD_selectBbs.do?q_bbsCode=1183&q_bbscttSn=20260520113842852",
+      "bytes": 541578,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "DOC-001",
+      "url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=13100000015&HighCtgCD=A01010001&Mcode=10200",
+      "bytes": 223550,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "DOC-002",
+      "url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=97400000004&HighCtgCD=A01008",
+      "bytes": 215159,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "DOC-003",
+      "url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=13100000025",
+      "bytes": 220073,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "DOC-004",
+      "url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=13110000047&HighCtgCD=A01008",
+      "bytes": 214695,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "FAMILY-001",
+      "url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=12700000050&HighCtgCD=A10023007",
+      "bytes": 213493,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "FAMILY-002",
+      "url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=12700000059",
+      "bytes": 212305,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "PASSPORT-001",
+      "url": "https://www.hscity.go.kr/www/minwon/passportIssuance/normalPassport.jsp",
+      "bytes": 472733,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "PASSPORT-002",
+      "url": "https://www.hscity.go.kr/www/minwon/passportIssuance/onlinePassport.jsp",
+      "bytes": 471507,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "HOUSING-001",
+      "url": "https://rtms.molit.go.kr/",
+      "status": "content_unavailable"
+    },
+    {
+      "id": "HOUSING-002",
+      "url": "https://www.iros.go.kr/",
+      "status": "content_unavailable"
+    },
+    {
+      "id": "HOUSING-003",
+      "url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=15000000098",
+      "bytes": 218226,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "HOUSING-004",
+      "url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=13100000026&tp_seq=01",
+      "bytes": 217524,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "TAX-001",
+      "url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=13100000056",
+      "bytes": 222204,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "TAX-002",
+      "url": "https://www.hscity.go.kr/www/partInfo/taxEcnmy/taxComsen/simpleLlx.jsp",
+      "bytes": 460045,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "VEHICLE-001",
+      "url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=15000000338",
+      "bytes": 217778,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "HEALTH-001",
+      "url": "https://www.hscity.go.kr/health/minwon/certificate.jsp",
+      "bytes": 162451,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "HEALTH-002",
+      "url": "https://www.hscity.go.kr/health/user/bbs/BD_selectBbs.do?q_bbsCode=1003&q_bbscttSn=20260102152256457",
+      "bytes": 173303,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "UTILITY-001",
+      "url": "https://www.hscity.go.kr/www/partInfo/trnsportEnvrn/wsupndrnInfo/wsupndrnInfo03/wsupndrnInfo0306.jsp",
+      "bytes": 459700,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "CIVIL-001",
+      "url": "https://www.hscity.go.kr/www/minwon/minwonGnrlzInfo/mnlssCvplInfo.jsp",
+      "bytes": 504591,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "CIVIL-002",
+      "url": "https://www.hscity.go.kr/www/minwon/minwonGnrlzInfo/hscityCllr.jsp",
+      "bytes": 474903,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "CIVIL-003",
+      "url": "https://www.hscity.go.kr/www/simin/ctznBbs.jsp",
+      "bytes": 443667,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "DISABILITY-001",
+      "url": "https://gowith.hscity.go.kr/service/service_view.jsp?seq=923",
+      "bytes": 42792,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "EV-001",
+      "url": "https://ev.or.kr/nportal/main.do",
+      "status": "content_unavailable"
+    },
+    {
+      "id": "JOB-001",
+      "url": "https://www.hscity.go.kr/www/gosi/BD_employment.do",
+      "bytes": 516297,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "PARKING-001",
+      "url": "https://www.hscity.go.kr/www/user/bbs/BD_selectBbs.do?q_bbsCode=1018&q_bbscttSn=20190725153742779",
+      "bytes": 483675,
+      "status": "http_body_retrieved"
+    },
+    {
+      "id": "BIRTH-003",
+      "url": "https://hsikium.hscity.go.kr/contents/content1.jsp?seq=57",
+      "status": "official_content_reviewed"
+    },
+    {
+      "id": "BIRTH-004",
+      "url": "https://hsikium.hscity.go.kr/contents/content1.jsp?seq=15",
+      "status": "official_content_reviewed"
+    },
+    {
+      "id": "BIRTH-005",
+      "url": "https://hsikium.hscity.go.kr/contents/content1.jsp?seq=70",
+      "status": "official_content_reviewed"
+    },
+    {
+      "id": "CENTER-001",
+      "url": "https://www.hscity.go.kr/town/index.do",
+      "status": "official_content_reviewed"
+    }
+  ],
+  "center_sources": [
+    {
+      "area": "봉담읍",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57500080000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/23xcj.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "우정읍",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57400130000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/wxxs.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "향남읍",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57400140000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/23xcw.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "남양읍",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57400150000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/2nxda.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "매송면",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57500090000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/wxxp.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "비봉면",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57500100000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/xgbh.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "마도면",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57400160000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/23xan.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "송산면",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57400170000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/23xcq.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "서신면",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57400180000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/wxxt.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "팔탄면",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57400190000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/xgbe.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "장안면",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57400200000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/23xcr.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "양감면",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57400210000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/xi7d.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "정남면",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57500110000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/xeko.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "새솔동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57400220000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/tumw.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "진안동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57600080000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/23xec.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "병점1동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57600090000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/23xdj.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "병점2동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57600100000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/23xdn.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "반월동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57600110000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/23xdg.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "기배동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57500120000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/u9fp.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "화산동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57600120000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/23xed.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "동탄1동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57700100000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/23xcy.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "동탄2동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57700110000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/23xd2.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "동탄3동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57700120000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/23xd7.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "동탄4동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57700130000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/23xda.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "동탄5동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57700140000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/u2pp.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "동탄6동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57700150000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/27z8x.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "동탄7동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57700160000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/u9yc.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "동탄8동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57700170000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/vnhf.json",
+      "status": "official_embedded_map_reviewed"
+    },
+    {
+      "area": "동탄9동",
+      "url": "https://www.hscity.go.kr/town/dept/BD_selectDeptCntnts.do?q_cntntsTy=directions&q_deptCode=57700180000",
+      "coordinate_source": "https://t1.kakaocdn.net/roughmap/pp437xxyor2.json",
+      "status": "official_embedded_map_reviewed"
+    }
+  ]
+}

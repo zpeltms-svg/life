@@ -1,0 +1,168 @@
+{
+  "ok": true,
+  "review_domains": 27,
+  "rows": [
+    {
+      "review": 1,
+      "domain": "구조",
+      "ok": true,
+      "evidence": "required files present"
+    },
+    {
+      "review": 2,
+      "domain": "문법",
+      "ok": true,
+      "evidence": "all Python + 5 JavaScript files"
+    },
+    {
+      "review": 3,
+      "domain": "서비스 스키마",
+      "ok": true,
+      "evidence": "36 services"
+    },
+    {
+      "review": 4,
+      "domain": "공식 URL 형식·기관",
+      "ok": true,
+      "evidence": "61 official HTTPS links; HTTP content limitations in SOURCE_AUDIT"
+    },
+    {
+      "review": 5,
+      "domain": "자료 유효기간",
+      "ok": true,
+      "evidence": "real dates + explicit unverified-content warnings"
+    },
+    {
+      "review": 6,
+      "domain": "센터 좌표·이전주소",
+      "ok": true,
+      "evidence": "2 behavioral tests"
+    },
+    {
+      "review": 7,
+      "domain": "처리 순서",
+      "ok": true,
+      "evidence": "registration -> city benefit -> voucher -> parental -> child allowance"
+    },
+    {
+      "review": 8,
+      "domain": "자연어 정답·오탐·상태격리",
+      "ok": true,
+      "evidence": "{\"ok\":true,\"assertions\":326,\"cases\":304}"
+    },
+    {
+      "review": 9,
+      "domain": "클라이언트·서버 검색 일치",
+      "ok": true,
+      "evidence": "304 frontend/server rankings identical"
+    },
+    {
+      "review": 10,
+      "domain": "빠른 메뉴",
+      "ok": true,
+      "evidence": "16 quick actions"
+    },
+    {
+      "review": 11,
+      "domain": "개인정보 외부전송 차단",
+      "ok": true,
+      "evidence": "3 behavioral tests"
+    },
+    {
+      "review": 12,
+      "domain": "API 입력·오류 노출",
+      "ok": true,
+      "evidence": "10 behavioral tests"
+    },
+    {
+      "review": 13,
+      "domain": "호출제한·메모리 상한",
+      "ok": true,
+      "evidence": "3 behavioral tests"
+    },
+    {
+      "review": 14,
+      "domain": "AI 구조화·허용 ID",
+      "ok": true,
+      "evidence": "3 behavioral tests"
+    },
+    {
+      "review": 15,
+      "domain": "외부 API 장애 대응",
+      "ok": true,
+      "evidence": "8 behavioral tests"
+    },
+    {
+      "review": 16,
+      "domain": "화성시 지역 필터",
+      "ok": true,
+      "evidence": "4 behavioral tests"
+    },
+    {
+      "review": 17,
+      "domain": "관할·길찾기",
+      "ok": true,
+      "evidence": "8 behavioral tests"
+    },
+    {
+      "review": 18,
+      "domain": "HTTP·CSP·파일노출 방어",
+      "ok": true,
+      "evidence": "6 behavioral tests"
+    },
+    {
+      "review": 19,
+      "domain": "접근성",
+      "ok": true,
+      "evidence": "labels, native controls, focus + browser keyboard/modal checks"
+    },
+    {
+      "review": 20,
+      "domain": "모바일 390",
+      "ok": true,
+      "evidence": "390x844, 13 scenarios, page errors 0"
+    },
+    {
+      "review": 21,
+      "domain": "모바일 412",
+      "ok": true,
+      "evidence": "412x915, 13 scenarios, page errors 0"
+    },
+    {
+      "review": 22,
+      "domain": "태블릿 768",
+      "ok": true,
+      "evidence": "768x1024, 13 scenarios, page errors 0"
+    },
+    {
+      "review": 23,
+      "domain": "데스크톱 1440",
+      "ok": true,
+      "evidence": "1440x900, 13 scenarios, page errors 0"
+    },
+    {
+      "review": 24,
+      "domain": "배포 구성",
+      "ok": true,
+      "evidence": "4 entrypoints; private helper modules; JSON included"
+    },
+    {
+      "review": 25,
+      "domain": "문서",
+      "ok": true,
+      "evidence": "run / test / limitations / data maintenance documented"
+    },
+    {
+      "review": 26,
+      "domain": "의존성",
+      "ok": true,
+      "evidence": "Python local 3.12.10, deployment 3.13; pinned SDK + Playwright"
+    },
+    {
+      "review": 27,
+      "domain": "Secret 검사",
+      "ok": true,
+      "evidence": "no real credential patterns or private env files"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>화성생활 내비 | 나의 생활 파일</title>
+  <meta name="description" content="화성에서의 새로운 생활을 생애주기별 파일로 정리해 드립니다." />
+  <link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="css/enhancements.css"></head>
+<body>
+  <a class="skip-link" href="#home">본문으로 건너뛰기</a>
+  <header class="topbar"><div class="shell nav-row"><a class="brand" href="#home" aria-label="화성생활 내비 홈"><span class="brand-mark">H</span>화성생활 내비</a><p class="nav-note">H W A S E O N G &nbsp; L I F E &nbsp; A R C H I V E</p><a class="nav-link" href="#files">생활 파일 둘러보기 <span aria-hidden="true">↘</span></a></div></header>
+  <main id="home" tabindex="-1"><div id="service-status" class="service-status shell" role="status">API 키 없이 검색·상세보기·센터 선택을 이용할 수 있습니다. 주소 자동확인·경로 예상시간은 지도 연동이 필요합니다.</div>
+    <section class="intro shell" aria-labelledby="hero-title"><p class="kicker">YOUR LIFE, FILED IN HWASEONG</p><h1 id="hero-title">화성에서 시작되는<br><em>당신의 다음 장면.</em></h1><div class="intro-bottom"><p>이사부터 아이의 탄생, 새로운 일까지. 지금의 생활 장면을 고르면<br class="lead-break">필요한 행정과 지원을 한 권의 파일처럼 차분히 정리해 드립니다.</p><a class="round-link" href="#files">내 생활 파일 찾기 <span>↓</span></a></div></section>
+    <section class="finder shell" aria-labelledby="finder-title"><div class="finder-title"><p class="kicker">OR, TELL US IN YOUR WORDS</p><h2 id="finder-title">상황을 직접<br>들려주세요.</h2></div><form id="guide-form" class="search-card"><label for="situation">지금 필요한 도움을 한 문장으로 적어주세요.</label><textarea id="situation" name="situation" rows="3" placeholder="예: 화성으로 이사 왔고, 초등학생 아이가 있어요" maxlength="300" aria-describedby="privacy-note" autocomplete="off" required></textarea><div class="quick-wrap" aria-label="추천 문장"><p>바로 시작하기</p><div class="chips"><button type="button" class="chip" data-text="화성으로 이사 왔어요">화성으로 이사 왔어요</button><button type="button" class="chip" data-text="아이가 태어났어요">아이가 태어났어요</button><button type="button" class="chip" data-text="화성에서 취업을 준비해요">새 일자리가 필요해요</button></div></div><button id="submit-btn" class="primary" type="submit">내 파일 만들기 <span>↗</span></button><p class="privacy-note" id="privacy-note">입력 내용은 이 앱이 별도로 저장하지 않습니다. AI·공공데이터 연동이 켜진 경우 검색을 위해 외부 API로 전송될 수 있으니 주민번호·전화번호·이메일·상세주소 등 개인정보는 입력하지 마세요.</p></form></section>
+    <section id="results" class="results shell" hidden aria-live="polite"><div class="section-head"><div><p class="kicker">YOUR SELECTED FILE</p><h2 id="result-title" tabindex="-1">이 상황에서 챙길 파일</h2></div><button id="reset-btn" type="button" class="secondary">다른 상황 찾기</button></div><div id="analysis-note" class="analysis-note"></div><div id="result-plan" class="result-plan" hidden></div><div id="result-list" class="card-list"></div><div id="no-result" class="empty" hidden><strong>등록된 공식 자료에서 맞는 파일을 찾지 못했어요.</strong><p>표현을 조금 바꾸거나 아래 공식 창구에서 바로 이어서 확인할 수 있습니다.</p><div class="empty-actions"><a href="https://www.gov.kr/" target="_blank" rel="noopener noreferrer">정부24에서 찾기 ↗</a><a href="https://www.hscity.go.kr/" target="_blank" rel="noopener noreferrer">화성특례시 공식 홈페이지 ↗</a><a href="https://www.epeople.go.kr/" target="_blank" rel="noopener noreferrer">국민신문고 ↗</a></div><small>담당부서를 모르겠다면 화성시 콜센터 1577-4200 또는 031-370-3900(평일 08:30~18:30)에서 안내받을 수 있습니다.</small></div></section>
+    <section class="archive" id="files" aria-labelledby="archive-title"><div class="shell archive-head"><div><p class="kicker">LIFE MOMENTS / 01—05</p><h2 id="archive-title">오늘, 어떤 이야기를<br>기록할까요?</h2></div><p>파일의 탭을 열어보세요.<br>해당 상황에 맞는 안내를 바로 찾아드립니다.</p></div><div class="file-rail" aria-label="생애주기별 생활 파일">
+      <article class="life-file file-move" data-text="화성으로 이사 왔어요" tabindex="0" role="button"><span class="file-no">01</span><span class="file-icon" aria-hidden="true">⌂</span><div><p>NEW HOME</p><h3>화성으로<br>이사 왔어요</h3><span class="file-arrow">파일 열기 ↗</span></div></article>
+      <article class="life-file file-birth" data-text="아이가 태어났어요" tabindex="0" role="button"><span class="file-no">02</span><span class="file-icon" aria-hidden="true">✳</span><div><p>NEW FAMILY</p><h3>아이가<br>태어났어요</h3><span class="file-arrow">파일 열기 ↗</span></div></article>
+      <article class="life-file file-youth" data-text="화성에서 취업이나 창업을 준비해요" tabindex="0" role="button"><span class="file-no">03</span><span class="file-icon" aria-hidden="true">↗</span><div><p>NEW WORK</p><h3>새로운 일을<br>시작해요</h3><span class="file-arrow">파일 열기 ↗</span></div></article>
+      <article class="life-file file-waste" data-text="이사하며 큰 가구를 버리려고 해요" tabindex="0" role="button"><span class="file-no">04</span><span class="file-icon" aria-hidden="true">⌑</span><div><p>DAILY LIFE</p><h3>생활을<br>정리해요</h3><span class="file-arrow">파일 열기 ↗</span></div></article>
+      <article class="life-file file-pet" data-text="취약계층 반려동물 진료 지원이 필요해요" tabindex="0" role="button"><span class="file-no">05</span><span class="file-icon" aria-hidden="true">♡</span><div><p>WITH PET</p><h3>반려동물<br>진료 지원</h3><span class="file-arrow">파일 열기 ↗</span></div></article>
+    </div></section>
+    <section class="popular-needs shell" aria-labelledby="popular-title"><div class="popular-head"><div><p class="kicker">WHAT CITIZENS LOOK FOR</p><h2 id="popular-title">시민이 자주 찾는 일,<br>바로 꺼내보세요.</h2></div><p>화성특례시 공식 홈페이지의 자주 찾는 민원과 생활 흐름을 반영했습니다.<br><b><span id="service-count">생활행정 서비스</span></b> · 자료 재확인 2026-09-07</p></div><div class="popular-grid" aria-label="시민이 자주 찾는 행정서비스">
+      <button type="button" class="citizen-quick" data-text="보건증 발급하고 싶어요"><b>보건증</b><span>건강진단결과서 발급</span></button>
+      <button type="button" class="citizen-quick" data-text="예방접종 가능한 병원을 찾고 싶어요"><b>예방접종</b><span>위탁의료기관 확인</span></button>
+      <button type="button" class="citizen-quick" data-text="여권 재발급하고 싶어요"><b>여권 재발급</b><span>온라인 가능 여부 확인</span></button>
+      <button type="button" class="citizen-quick" data-text="주민등록 등본 발급이 필요해요"><b>등본·초본</b><span>정부24·무인발급</span></button>
+      <button type="button" class="citizen-quick" data-text="가족관계증명서 발급이 필요해요"><b>가족관계</b><span>증명서 발급</span></button>
+      <button type="button" class="citizen-quick" data-text="확정일자를 받고 싶어요"><b>확정일자</b><span>전자신청·확인</span></button>
+      <button type="button" class="citizen-quick" data-text="자동차세를 조회하고 납부하고 싶어요"><b>자동차세</b><span>조회·납부</span></button>
+      <button type="button" class="citizen-quick" data-text="수도요금을 조회하고 싶어요"><b>상하수도</b><span>요금 조회·납부</span></button>
+      <button type="button" class="citizen-quick" data-text="가까운 무인민원발급기를 찾고 싶어요"><b>무인발급기</b><span>운영장소 확인</span></button>
+      <button type="button" class="citizen-quick" data-text="화성시 채용공고를 보고 싶어요"><b>채용공고</b><span>최신 공고 확인</span></button>
+      <button type="button" class="citizen-quick" data-text="주정차 과태료를 조회하고 싶어요"><b>주정차 과태료</b><span>조회·의견진술</span></button>
+      <button type="button" class="citizen-quick" data-text="국민신문고로 민원을 넣고 싶어요"><b>국민신문고</b><span>일반민원 제출</span></button>
+    </div><details class="more-quick"><summary>자주 찾는 일 더보기</summary><div class="popular-grid">
+      <button type="button" class="citizen-quick" data-text="인감증명서 발급"><b>인감증명</b><span>용도별 신청방법</span></button>
+      <button type="button" class="citizen-quick" data-text="전입신고"><b>전입신고</b><span>이사 후 주소 변경</span></button>
+      <button type="button" class="citizen-quick" data-text="출생신고"><b>출생신고</b><span>아이 출생 후 첫 절차</span></button>
+      <button type="button" class="citizen-quick" data-text="대형폐기물 배출 신청"><b>대형폐기물</b><span>가구·가전 배출 안내</span></button>
+    </div></details></section>
+    <section id="centers" class="center-finder shell" aria-labelledby="center-title">
+      <p class="kicker">YOUR NEIGHBORHOOD OFFICE</p><h2 id="center-title">우리 집 관할센터는 어디일까요?</h2>
+      <p>주소로 관할을 확인하거나, 읍·면·동을 직접 선택하세요. 가까운 센터도 찾을 수 있어요.</p>
+      <div class="center-layout"><div class="center-controls">
+        <form id="center-form"><label for="center-address">화성시 주소 또는 읍·면·동</label><input id="center-address" maxlength="120" placeholder="예: 화성시 향남읍 발안로 89" autocomplete="off" required aria-describedby="center-privacy"><button id="center-find" type="submit">주소로 관할센터 찾기</button></form>
+        <small id="center-privacy">주소 자동확인 시 입력 주소를 지도 제공업체에 전송합니다. 동·호수는 입력하지 마세요. 읍·면·동 직접 선택과 가까운 센터 계산은 기기에서 처리합니다.</small>
+        <div><label for="center-area">읍·면·동 직접 선택</label><select id="center-area"><option value="">읍·면·동을 선택하세요</option></select></div>
+        <button id="center-nearest" type="button">현재 위치에서 가까운 센터 3곳</button>
+        <p id="center-status" role="status" aria-live="polite"></p>
+      </div><div id="center-result" class="center-result" aria-live="polite"></div></div>
+    </section>
+    <section class="principles shell"><p class="kicker">HOW WE KEEP YOUR FILE USEFUL</p><div class="principles-grid"><h2>복잡한 행정은<br>간결한 순서로.</h2><p><b>01 / 상황부터</b>서비스 이름이 아닌 당신의 생활 장면에서 출발합니다.</p><p><b>02 / 공식 정보만</b>정부24와 화성특례시의 공식 안내를 바탕으로 정리합니다.</p><p><b>03 / 확인은 항상</b>신청 전 최신 공고와 조건을 한 번 더 확인할 수 있게 합니다.</p></div></section>
+  </main>
+  <dialog id="detail-dialog" class="detail-dialog" aria-labelledby="detail-title"><div class="dialog-head"><div><span id="detail-category" class="badge"></span><h2 id="detail-title"></h2></div><button type="button" id="detail-close" class="icon-btn" aria-label="닫기">×</button></div><div id="detail-body"></div></dialog>
+  <footer><div class="shell"><p><strong>화성생활 내비</strong> — 화성시민 생활행정 안내</p><p>행정정보는 변경될 수 있으므로 실제 신청 전 공식 출처의 최신 내용을 확인해 주세요.</p></div></footer><script src="search-core.js" defer></script><script src="js/centers.js" defer></script><script src="app.js" defer></script>
+<noscript><div class="shell" style="padding:24px 0">이 서비스는 JavaScript가 필요합니다. 브라우저에서 JavaScript를 허용해 주세요.</div></noscript>
+</body></html>

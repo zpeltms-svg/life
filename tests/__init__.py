@@ -1,0 +1,1 @@
+"""Life Navi automated validation."""

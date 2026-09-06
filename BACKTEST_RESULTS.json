@@ -1,0 +1,147 @@
+{
+  "ok": true,
+  "independent_runs": 15,
+  "rounds_per_run": 15,
+  "total_rounds": 225,
+  "cases_per_round": 304,
+  "total_assertions": 171900,
+  "seeds": [
+    20260907,
+    314159,
+    271828,
+    8675309,
+    424242,
+    999983,
+    13579,
+    24680,
+    112358,
+    161803,
+    777777,
+    888888,
+    123457,
+    765431,
+    555551
+  ],
+  "runs": [
+    {
+      "ok": true,
+      "rounds": 15,
+      "cases": 304,
+      "assertions": 11460,
+      "seed": 20260907,
+      "run": 1
+    },
+    {
+      "ok": true,
+      "rounds": 15,
+      "cases": 304,
+      "assertions": 11460,
+      "seed": 314159,
+      "run": 2
+    },
+    {
+      "ok": true,
+      "rounds": 15,
+      "cases": 304,
+      "assertions": 11460,
+      "seed": 271828,
+      "run": 3
+    },
+    {
+      "ok": true,
+      "rounds": 15,
+      "cases": 304,
+      "assertions": 11460,
+      "seed": 8675309,
+      "run": 4
+    },
+    {
+      "ok": true,
+      "rounds": 15,
+      "cases": 304,
+      "assertions": 11460,
+      "seed": 424242,
+      "run": 5
+    },
+    {
+      "ok": true,
+      "rounds": 15,
+      "cases": 304,
+      "assertions": 11460,
+      "seed": 999983,
+      "run": 6
+    },
+    {
+      "ok": true,
+      "rounds": 15,
+      "cases": 304,
+      "assertions": 11460,
+      "seed": 13579,
+      "run": 7
+    },
+    {
+      "ok": true,
+      "rounds": 15,
+      "cases": 304,
+      "assertions": 11460,
+      "seed": 24680,
+      "run": 8
+    },
+    {
+      "ok": true,
+      "rounds": 15,
+      "cases": 304,
+      "assertions": 11460,
+      "seed": 112358,
+      "run": 9
+    },
+    {
+      "ok": true,
+      "rounds": 15,
+      "cases": 304,
+      "assertions": 11460,
+      "seed": 161803,
+      "run": 10
+    },
+    {
+      "ok": true,
+      "rounds": 15,
+      "cases": 304,
+      "assertions": 11460,
+      "seed": 777777,
+      "run": 11
+    },
+    {
+      "ok": true,
+      "rounds": 15,
+      "cases": 304,
+      "assertions": 11460,
+      "seed": 888888,
+      "run": 12
+    },
+    {
+      "ok": true,
+      "rounds": 15,
+      "cases": 304,
+      "assertions": 11460,
+      "seed": 123457,
+      "run": 13
+    },
+    {
+      "ok": true,
+      "rounds": 15,
+      "cases": 304,
+      "assertions": 11460,
+      "seed": 765431,
+      "run": 14
+    },
+    {
+      "ok": true,
+      "rounds": 15,
+      "cases": 304,
+      "assertions": 11460,
+      "seed": 555551,
+      "run": 15
+    }
+  ]
+}

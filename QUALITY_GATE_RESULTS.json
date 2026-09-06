@@ -1,0 +1,42 @@
+{
+  "ok": true,
+  "checked_at": "2026-09-06T16:30:11.648384+00:00",
+  "fingerprint": "fbeda4e90fae9434c313de1b3093ad65adbd1261e1150e2d996efd6548bc2b20",
+  "stages": [
+    {
+      "stage": "regression",
+      "ok": true,
+      "output": "----------------------------------------------------------------------\nRan 207 tests in 0.844s\n\nOK"
+    },
+    {
+      "stage": "search_contracts",
+      "ok": true,
+      "output": "{\"ok\":true,\"assertions\":326,\"cases\":304}"
+    },
+    {
+      "stage": "sdk_contract",
+      "ok": true,
+      "output": "{\"ok\": true, \"sdk\": \"3.8.0\", \"live_requests\": 0, \"in_memory_requests\": 1}"
+    },
+    {
+      "stage": "browser_workflows",
+      "ok": true,
+      "output": "{\"ok\": true, \"actual_http\": true, \"page_errors\": 0}"
+    },
+    {
+      "stage": "browser_resilience",
+      "ok": true,
+      "output": "{\"ok\": true, \"page_errors\": 0, \"viewports\": [{\"width\": 390, \"height\": 844, \"ok\": true, \"overflow\": false, \"scenarios\": 13}, {\"width\": 412, \"height\": 915, \"ok\": true, \"overflow\": false, \"scenarios\": 13}, {\"width\": 768, \"height\": 1024, \"ok\": true, \"overflow\": false, \"scenarios\": 13}, {\"width\": 1440, \"height\": 900, \"ok\": true, \"overflow\": false, \"scenarios\": 13}], \"data_failure_cases\": 2, \"live_provider_calls\": false}"
+    },
+    {
+      "stage": "backtests",
+      "ok": true,
+      "output": "[PASS 01/15] seed=20260907 rounds=15 cases=304 assertions=11460\n[PASS 02/15] seed=314159 rounds=15 cases=304 assertions=11460\n[PASS 03/15] seed=271828 rounds=15 cases=304 assertions=11460\n[PASS 04/15] seed=8675309 rounds=15 cases=304 assertions=11460\n[PASS 05/15] seed=424242 rounds=15 cases=304 assertions=11460\n[PASS 06/15] seed=999983 rounds=15 cases=304 assertions=11460\n[PASS 07/15] seed=13579 rounds=15 cases=304 assertions=11460\n[PASS 08/15] seed=24680 rounds=15 cases=304 assertions=11460\n[PASS 09/15] seed=112358 rounds=15 cases=304 assertions=11460\n[PASS 10/15] seed=161803 rounds=15 cases=304 assertions=11460\n[PASS 11/15] seed=777777 rounds=15 cases=304 assertions=11460\n[PASS 12/15] seed=888888 rounds=15 cases=304 assertions=11460\n[PASS 13/15] seed=123457 rounds=15 cases=304 assertions=11460\n[PASS 14/15] seed=765431 rounds=15 cases=304 assertions=11460\n[PASS 15/15] seed=555551 rounds=15 cases=304 assertions=11460\n{\"ok\": true, \"independent_runs\": 15, \"rounds_per_run\": 15, \"total_rounds\": 225, \"cases_per_round\": 304, \"total_assertions\": 171900, \"seeds\": [20260907, 314159, 271828, 8675309, 424242, 999983, 13579, 24680, 112358, 161803, 777777, 888888, 123457, 765431, 555551]}"
+    },
+    {
+      "stage": "reviews",
+      "ok": true,
+      "output": "[PASS 01] 구조: required files present\n[PASS 02] 문법: all Python + 5 JavaScript files\n[PASS 03] 서비스 스키마: 36 services\n[PASS 04] 공식 URL 형식·기관: 61 official HTTPS links; HTTP content limitations in SOURCE_AUDIT\n[PASS 05] 자료 유효기간: real dates + explicit unverified-content warnings\n[PASS 06] 센터 좌표·이전주소: 2 behavioral tests\n[PASS 07] 처리 순서: registration -> city benefit -> voucher -> parental -> child allowance\n[PASS 08] 자연어 정답·오탐·상태격리: {\"ok\":true,\"assertions\":326,\"cases\":304}\n[PASS 09] 클라이언트·서버 검색 일치: 304 frontend/server rankings identical\n[PASS 10] 빠른 메뉴: 16 quick actions\n[PASS 11] 개인정보 외부전송 차단: 3 behavioral tests\n[PASS 12] API 입력·오류 노출: 10 behavioral tests\n[PASS 13] 호출제한·메모리 상한: 3 behavioral tests\n[PASS 14] AI 구조화·허용 ID: 3 behavioral tests\n[PASS 15] 외부 API 장애 대응: 8 behavioral tests\n[PASS 16] 화성시 지역 필터: 4 behavioral tests\n[PASS 17] 관할·길찾기: 8 behavioral tests\n[PASS 18] HTTP·CSP·파일노출 방어: 6 behavioral tests\n[PASS 19] 접근성: labels, native controls, focus + browser keyboard/modal checks\n[PASS 20] 모바일 390: 390x844, 13 scenarios, page errors 0\n[PASS 21] 모바일 412: 412x915, 13 scenarios, page errors 0\n[PASS 22] 태블릿 768: 768x1024, 13 scenarios, page errors 0\n[PASS 23] 데스크톱 1440: 1440x900, 13 scenarios, page errors 0\n[PASS 24] 배포 구성: 4 entrypoints; private helper modules; JSON included\n[PASS 25] 문서: run / test / limitations / data maintenance documented\n[PASS 26] 의존성: Python local 3.12.10, deployment 3.13; pinned SDK + Playwright\n[PASS 27] Secret 검사: no real credential patterns or private env files\n{\"ok\": true, \"review_domains\": 27}"
+    }
+  ]
+}

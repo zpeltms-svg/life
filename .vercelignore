@@ -1,0 +1,15 @@
+.env*
+!.env.example
+.git
+__pycache__
+**/__pycache__
+*.pyc
+tests
+*.md
+*_RESULTS*.json
+SOURCE_AUDIT.json
+*.zip
+*.sha256
+실행.bat
+실행.command
+local_preview.py

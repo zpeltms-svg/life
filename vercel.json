@@ -1,0 +1,61 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/guide",
+      "destination": "/api/guide.py"
+    },
+    {
+      "source": "/api/public-services",
+      "destination": "/api/public_services.py"
+    },
+    {
+      "source": "/api/route",
+      "destination": "/api/route.py"
+    },
+    {
+      "source": "/api/address",
+      "destination": "/api/address.py"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "geolocation=(self), camera=(), microphone=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' https://*.naver.com https://*.pstatic.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.naver.com https://*.pstatic.net; connect-src 'self' https://*.naver.com https://*.ntruss.com https://*.pstatic.net; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        }
+      ]
+    }
+  ],
+  "functions": {
+    "api/*.py": {
+      "includeFiles": "data/**",
+      "maxDuration": 30
+    }
+  }
+}
