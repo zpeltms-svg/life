@@ -126,25 +126,25 @@
       "review": 21,
       "domain": "모바일 390",
       "ok": true,
-      "evidence": "390x844, 16 scenarios, page errors 0"
+      "evidence": "390x844, 18 scenarios, page errors 0"
     },
     {
       "review": 22,
       "domain": "모바일 412",
       "ok": true,
-      "evidence": "412x915, 16 scenarios, page errors 0"
+      "evidence": "412x915, 18 scenarios, page errors 0"
     },
     {
       "review": 23,
       "domain": "태블릿 768",
       "ok": true,
-      "evidence": "768x1024, 16 scenarios, page errors 0"
+      "evidence": "768x1024, 18 scenarios, page errors 0"
     },
     {
       "review": 24,
       "domain": "데스크톱 1440",
       "ok": true,
-      "evidence": "1440x900, 16 scenarios, page errors 0"
+      "evidence": "1440x900, 18 scenarios, page errors 0"
     },
     {
       "review": 25,

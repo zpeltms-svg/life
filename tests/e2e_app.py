@@ -170,7 +170,7 @@ def run():
 
         # An address can replace an inaccurate device location and must show distance immediately.
         page.locator('button.detail-btn[data-id="BIRTH-001"]').click()
-        page.locator('.nearest-origin-address').fill('상신하길로274번길 21')
+        page.locator('.nearest-origin-address').fill('발안로 89')
         page.locator('.nearest-address-btn').click()
         page.wait_for_function("() => document.querySelector('.nearest-area-select').value === '향남읍'")
         page.wait_for_function("() => document.querySelector('.nearest-center-panel .route-status').innerText.includes('자동차 약')")

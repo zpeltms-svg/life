@@ -187,9 +187,9 @@ function openDetail(service) {
     <section class="application-panel jurisdiction-panel welfare-center-panel" data-service-id="${escapeHtml(service.id)}">
       <p>JURISDICTION OFFICE</p>
       <strong>주소지 관할 행정복지센터를 확인해 주세요.</strong>
-      <label>현재 주소<input class="current-address" name="current-address" maxlength="120" placeholder="예: 화성시 향남읍 발안로 89" autocomplete="street-address"></label>
+      <label>현재 주소<input class="current-address" name="current-address" maxlength="120" placeholder="화성시 도로명주소 입력" autocomplete="street-address"></label>
       <div class="inline-actions">
-        <button class="current-address-btn" type="button">현재 위치로 주소 설정</button>
+        <button class="current-address-btn" type="button">현재 위치에서 가까운 센터 찾기 (관할 아님)</button>
         <button class="resolve-address-btn" type="button">입력 주소로 관할 찾기</button>
       </div>
       <label>화성시 읍·면·동<select class="welfare-area-select">${welfareOptions('관할 읍·면·동 선택')}</select></label>
@@ -205,7 +205,7 @@ function openDetail(service) {
       <strong>전국 읍·면·동에서 접수할 수 있습니다.</strong>
       <span>이 업무를 접수할 수 있는 행정복지센터 중 가장 가까운 곳을 찾습니다.</span>
       <button class="nearest-center-btn" type="button">현재 위치 기준 센터 찾기</button>
-      <label>기기 위치가 다를 때 현재 주소<input class="nearest-origin-address" maxlength="120" placeholder="예: 상신하길로274번길 21" autocomplete="street-address"></label>
+      <label>기기 위치가 다를 때 현재 주소<input class="nearest-origin-address" maxlength="120" placeholder="화성시 도로명주소 입력" autocomplete="street-address"></label>
       <button class="nearest-address-btn" type="button">입력 주소 기준 가장 가까운 접수처 찾기</button>
       <label>화성시 센터 직접 선택<select class="nearest-area-select">${welfareOptions('방문할 읍·면·동 선택')}</select></label>
       <button class="nearest-area-route-btn" type="button">선택한 센터 길찾기</button>
@@ -228,7 +228,7 @@ function openDetail(service) {
       <p>OFFLINE VISIT</p>
       ${destinations.length > 1 ? `<strong>방문할 곳을 선택하세요.</strong><div class="destination-choices">${destinations.map((item) => `<button class="destination-choice" type="button" data-address="${escapeHtml(item.address)}"><b>${escapeHtml(item.name)}</b><span>${escapeHtml(item.address)}</span><em>현재 위치에서 예상시간 보기 →</em></button>`).join('')}</div>` : `<strong>${escapeHtml(destinations[0].name)}</strong><span>${escapeHtml(destinations[0].address)}</span><button class="route-btn" type="button" data-address="${escapeHtml(destinations[0].address)}">현재 위치에서 예상시간 보기</button>`}
       <form class="destination-form">
-        <label>다른 장소 또는 화성시 읍·면·동 검색<input name="destination" class="area-search" list="welfare-area-options" maxlength="120" placeholder="예: 향남읍, 동탄7동, 화성시 동탄대로 635" autocomplete="street-address"></label>
+        <label>다른 장소 또는 화성시 읍·면·동 검색<input name="destination" class="area-search" list="welfare-area-options" maxlength="120" placeholder="읍·면·동 또는 도로명주소 입력" autocomplete="street-address"></label>
         <datalist id="welfare-area-options">${welfareAreas.map((area) => `<option value="${escapeHtml(area)}"></option>`).join('')}</datalist>
         <button type="submit">목적지 선택</button>
       </form>
@@ -281,14 +281,6 @@ function getCurrentPosition() {
   });
 }
 
-async function addressFromCoordinates(coords) {
-  return fetchJson('/api/address', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ latitude: coords.latitude, longitude: coords.longitude }),
-  });
-}
-
 async function resolveTypedAddress(address) {
   return fetchJson('/api/address', {
     method: 'POST',
@@ -301,7 +293,7 @@ function centerForArea(area) {
   return welfareCenters.find((center) => center.area === area) || null;
 }
 
-async function showRoute(button, destinationQuery = '', originOverride = null) {
+async function showRoute(button, destinationQuery = '', originOverride = null, destinationCenter = null) {
   const panel = button.closest('.visit-panel, .welfare-center-panel');
   const status = panel?.querySelector('.route-status');
   if (!panel || !status) return;
@@ -310,8 +302,18 @@ async function showRoute(button, destinationQuery = '', originOverride = null) {
   const originalLabel = button.textContent;
   const originalNodes = [...button.childNodes].map(node => node.cloneNode(true));
   button.textContent = '현재 위치 확인 중…';
+  let directRouteHtml = '';
   try {
     const coords = originOverride || (await getCurrentPosition()).coords;
+    if (destinationCenter) {
+      window.LifeNaviCenters.trustedNearest(coords, welfareCenters);
+      const directDistance = window.LifeNaviCenters.distanceKm(coords.latitude, coords.longitude, destinationCenter);
+      button.dataset.fallbackDistance = String(directDistance);
+      const appUrl = `nmap://route/car?slat=${encodeURIComponent(coords.latitude)}&slng=${encodeURIComponent(coords.longitude)}&sname=${encodeURIComponent('현재 위치')}&dlat=${encodeURIComponent(destinationCenter.lat)}&dlng=${encodeURIComponent(destinationCenter.lng)}&dname=${encodeURIComponent(destinationCenter.name)}&appname=${encodeURIComponent('com.hwaseong.life')}`;
+      const webUrl = `https://map.naver.com/p/search/${encodeURIComponent(destinationCenter.address + ' ' + destinationCenter.name)}`;
+      directRouteHtml = `<strong>직선거리 약 ${directDistance.toFixed(1)}km</strong><div class="route-links"><a href="${escapeHtml(appUrl)}" rel="noopener noreferrer">네이버 지도 앱 길안내 ↗</a><a href="${escapeHtml(webUrl)}" target="_blank" rel="noopener noreferrer">웹에서 센터 열기 ↗</a></div>`;
+      status.innerHTML = directRouteHtml;
+    }
     const route = await fetchJson('/api/route', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -341,8 +343,12 @@ async function showRoute(button, destinationQuery = '', originOverride = null) {
     button.hidden = true;
   } catch (error) {
     const fallbackDistance = Number(button.dataset.fallbackDistance);
-    status.textContent = error?.code === 1 ? '예상시간을 보려면 현재 위치 사용을 허용해 주세요.' : (Number.isFinite(fallbackDistance) ? `직선거리 약 ${fallbackDistance.toFixed(1)}km입니다. 도로 거리·예상시간은 지도 경로 연동 후 표시됩니다.` : (error.message || '경로 정보를 불러오지 못했습니다.'));
-    if (destinationQuery) {
+    if (directRouteHtml && Number.isFinite(fallbackDistance)) {
+      status.innerHTML = directRouteHtml + '<small>도로 거리·예상시간을 불러오지 못해 직선거리를 표시했습니다. 위 링크의 네이버 지도 길안내는 바로 이용할 수 있습니다.</small>';
+    } else {
+      status.textContent = error?.code === 1 ? '거리를 계산하려면 현재 위치 사용을 허용해 주세요.' : (error.message || '경로 정보를 불러오지 못했습니다.');
+    }
+    if (!directRouteHtml && destinationQuery) {
       const link = document.createElement('a'); link.className='route-fallback'; link.textContent='네이버 지도에서 목적지·길찾기 열기 ↗'; link.href=`https://map.naver.com/p/search/${encodeURIComponent(destinationQuery)}`; link.target='_blank'; link.rel='noopener noreferrer'; status.append(document.createElement('br'),link);
     }
     button.disabled = false;
@@ -390,7 +396,6 @@ async function renderNaverMap(panel, route, origin) {
 
 async function setCurrentAddress(button) {
   const panel = button.closest('.welfare-center-panel');
-  const input = panel.querySelector('.current-address');
   const select = panel.querySelector('.welfare-area-select');
   const status = panel.querySelector('.route-status');
   const originalLabel = button.textContent;
@@ -398,13 +403,11 @@ async function setCurrentAddress(button) {
   button.textContent = '현재 위치 확인 중…';
   try {
     const { coords } = await getCurrentPosition();
-    const data = await addressFromCoordinates(coords);
-    input.value = data.address || '';
-    const area = SearchCore.matchWelfareArea(data.area || data.address || '', welfareAreas);
-    if (area) select.value = area;
-    status.textContent = area ? `${area} 관할로 자동 선택했습니다.` : '주소를 불러왔습니다. 관할 읍·면·동을 확인해 주세요.';
+    const center = window.LifeNaviCenters.trustedNearest(coords, welfareCenters);
+    select.value = center.area;
+    status.textContent = `현재 위치에서 직선거리 약 ${center.distance.toFixed(1)}km의 ${center.name}을 선택했습니다. 가까운 센터이며 주소지 관할 판정은 아닙니다.`;
   } catch (error) {
-    status.textContent = error?.code === 1 ? '주소를 불러오려면 현재 위치 사용을 허용해 주세요.' : (error.message || '현재 위치 주소를 불러오지 못했습니다.');
+    status.textContent = error?.code === 1 ? '가까운 센터를 찾으려면 현재 위치 사용을 허용해 주세요.' : (error.message || '현재 위치의 가까운 센터를 찾지 못했습니다.');
   } finally {
     button.disabled = false;
     button.textContent = originalLabel;
@@ -462,7 +465,7 @@ async function findCurrentAreaCenter(button) {
     button.dataset.fallbackDistance = String(center.distance);
     button.disabled = false;
     button.textContent = `${center.name} 길찾기`;
-    await showRoute(button, center.address, coords);
+    await showRoute(button, center.address, coords, center);
   } catch (error) {
     status.textContent = error?.code === 1 ? '현재 위치 사용을 허용하거나 아래에서 센터를 직접 선택해 주세요.' : (error.message || '현재 위치의 센터를 찾지 못했습니다.');
     button.disabled = false;
@@ -490,7 +493,7 @@ async function findAddressNearestCenter(button) {
     status.textContent = `이 업무를 접수할 수 있는 가장 가까운 곳은 ${center.name}, 직선거리 약 ${center.distance.toFixed(1)}km입니다.`;
     button.disabled = false;
     button.textContent = `${center.name} 길찾기`;
-    await showRoute(button, center.address, point);
+    await showRoute(button, center.address, point, center);
   } catch (error) {
     status.textContent = error.message || '입력 주소 기준 접수처를 찾지 못했습니다.';
   } finally {
@@ -560,7 +563,7 @@ detailBody.addEventListener('click', async (event) => {
     const center = centerForArea(area);
     if (!area) return void (panel.querySelector('.route-status').textContent = '먼저 주소지 관할 읍·면·동을 선택해 주세요.');
     if (!center) return void (panel.querySelector('.route-status').textContent = '선택한 관할 센터 주소를 찾지 못했습니다.');
-    return showRoute(welfareButton, center.address);
+    return showRoute(welfareButton, center.address, null, center);
   }
 
   const currentAddressButton = event.target.closest('.current-address-btn');
@@ -582,7 +585,7 @@ detailBody.addEventListener('click', async (event) => {
     const center = centerForArea(area);
     if (!area) return void (panel.querySelector('.route-status').textContent = '방문할 읍·면·동 센터를 먼저 선택해 주세요.');
     if (!center) return void (panel.querySelector('.route-status').textContent = '선택한 센터 주소를 찾지 못했습니다.');
-    return showRoute(nearestAreaButton, center.address);
+    return showRoute(nearestAreaButton, center.address, null, center);
   }
 
   const option = event.target.closest('.route-option');

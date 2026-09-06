@@ -102,5 +102,5 @@ window.LifeNaviCenters = (() => {
     });
   }
 
-  return {nearest,trustedNearest,knownJurisdiction,renderCenter,init};
+  return {distanceKm,nearest,trustedNearest,knownJurisdiction,renderCenter,init};
 })();

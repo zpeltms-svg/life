@@ -125,7 +125,7 @@ class SearchAndFrontendTests(unittest.TestCase):
     def test_sensitive_client_guard(self): self.assertIn('containsSensitiveInfo(query)', APP)
     def test_sensitive_message_explains_local_only(self): self.assertIn('외부 AI·공공데이터 전송 없이', APP)
     def test_manual_address_api(self): self.assertIn("body: JSON.stringify({ address })", APP)
-    def test_coordinate_address_api(self): self.assertIn("body: JSON.stringify({ latitude: coords.latitude, longitude: coords.longitude })", APP)
+    def test_current_location_never_claims_address_without_geocoder(self): self.assertIn('trustedNearest(coords, welfareCenters)', APP); self.assertNotIn('현재 위치로 주소 설정', APP)
     def test_jurisdiction_button_exists(self): self.assertIn('resolve-address-btn', APP)
     def test_nearest_center_manual_select(self): self.assertIn('nearest-area-select', APP)
     def test_no_browser_geocoder_dependency(self): self.assertNotIn('naver.maps.Service.geocode', APP)
