@@ -4,6 +4,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -306,6 +307,16 @@ class DeploymentTests(unittest.TestCase):
     def test_posix_one_click_launcher(self): self.assertTrue((ROOT/'실행.command').exists()); self.assertIn('local_preview.py', (ROOT/'실행.command').read_text(encoding='utf-8'))
     def test_local_preview_compiles(self):
         result=subprocess.run([sys.executable,'-m','py_compile','local_preview.py'],cwd=ROOT,capture_output=True,text=True); self.assertEqual(result.returncode,0,result.stderr)
+    def test_local_preview_loads_uncommitted_env_without_override(self):
+        import local_preview
+        with tempfile.TemporaryDirectory(dir=ROOT) as temp:
+            folder=Path(temp)
+            (folder/'.env').write_text('LIFE_NAVI_TEST_SETTING=from-env\n',encoding='utf-8')
+            (folder/'.env.local').write_text('LIFE_NAVI_TEST_SETTING=from-local\nINVALID-KEY=nope\n',encoding='utf-8')
+            with mock.patch.object(local_preview,'ROOT',folder), mock.patch.dict(os.environ,{'LIFE_NAVI_TEST_SETTING':'from-process'}):
+                loaded=local_preview.load_local_environment()
+                self.assertEqual(loaded,['.env.local','.env'])
+                self.assertEqual(os.environ['LIFE_NAVI_TEST_SETTING'],'from-process')
     def test_docs_mention_one_click_preview(self):
         readme=(ROOT/'README.md').read_text(encoding='utf-8'); self.assertIn('실행.bat', readme); self.assertIn('실행.command', readme)
 

@@ -14,7 +14,7 @@ GENERATED={'QUALITY_GATE_RESULTS.json','QUALITY_REPORT.md','BACKTEST_RESULTS.jso
 def fingerprint(root=ROOT):
     digest=hashlib.sha256()
     for p in sorted(root.rglob('*')):
-        if not p.is_file() or '__pycache__' in p.parts or p.name in GENERATED or p.suffix in ('.pyc','.png','.zip','.sha256') or p.name.startswith('REVIEW_RESULTS_'):continue
+        if not p.is_file() or '__pycache__' in p.parts or '.git' in p.parts or p.name in GENERATED or p.suffix in ('.pyc','.png','.zip','.sha256') or p.name.startswith('REVIEW_RESULTS_') or (p.name.startswith('.env') and p.name != '.env.example'):continue
         digest.update(p.relative_to(root).as_posix().encode());digest.update(p.read_bytes())
     return digest.hexdigest()
 
@@ -23,6 +23,7 @@ def main():
     stages=[
       ('regression',[sys.executable,'-X','utf8','-m','unittest','discover','-s','tests','-q']),
       ('search_contracts',['node','tests/search_contracts.js']),
+      ('center_contracts',['node','tests/center_contracts.js']),
       ('sdk_contract',[sys.executable,'-X','utf8','tests/sdk_contract.py']),
       ('browser_workflows',[sys.executable,'-X','utf8','tests/e2e_app.py']),
       ('browser_resilience',[sys.executable,'-X','utf8','tests/e2e_resilience.py']),

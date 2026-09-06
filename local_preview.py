@@ -6,10 +6,38 @@ import webbrowser
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse, unquote
+
+ROOT = Path(__file__).resolve().parent
+
+
+def load_local_environment():
+    """Load uncommitted local settings without overriding process variables."""
+    loaded = []
+    for filename in ('.env.local', '.env'):
+        path = ROOT / filename
+        if not path.is_file():
+            continue
+        for raw_line in path.read_text(encoding='utf-8-sig').splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith('#') or '=' not in line:
+                continue
+            key, value = line.split('=', 1)
+            key = key.strip()
+            if not key.replace('_', '').isalnum() or key[:1].isdigit():
+                continue
+            value = value.strip()
+            if len(value) >= 2 and value[0] == value[-1] and value[0] in ('\"', "'"):
+                value = value[1:-1]
+            if key not in os.environ:
+                os.environ[key] = value
+        loaded.append(filename)
+    return loaded
+
+
+LOADED_ENV_FILES = load_local_environment()
 from api import guide, public_services, address, route
 from api._common import RequestError, send_error
 
-ROOT = Path(__file__).resolve().parent
 HOST = "127.0.0.1"
 API_HANDLERS = {'/api/guide': guide.handler, '/api/public-services': public_services.handler, '/api/address': address.handler, '/api/route': route.handler}
 STATIC_FILES = {'/', '/index.html', '/app.js', '/search-core.js', '/style.css', '/css/enhancements.css', '/js/centers.js', '/data/services.json', '/data/welfare-centers.json'}
@@ -94,6 +122,10 @@ def main():
     url = f"http://{HOST}:{port}/index.html"
     print("화성생활 내비 로컬 미리보기")
     print(f"브라우저 주소: {url}")
+    if LOADED_ENV_FILES:
+        print("로컬 연동 설정을 불러왔습니다: " + ", ".join(LOADED_ENV_FILES))
+    if not (os.getenv('PUBLIC_DATA_SERVICE_KEY') or '').strip():
+        print("공공데이터 확장 검색: 꺼짐 (.env.local에 PUBLIC_DATA_SERVICE_KEY를 설정하면 켜집니다)")
     print("종료하려면 이 창에서 Ctrl+C를 누르세요.")
     if (os.getenv("LIFE_NAVI_NO_BROWSER") or "").strip() != "1":
         threading.Timer(0.6, lambda: webbrowser.open(url)).start()

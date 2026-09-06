@@ -6,7 +6,7 @@ import types
 import unittest
 from pathlib import Path
 from unittest import mock
-from urllib.error import URLError
+from urllib.error import HTTPError, URLError
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
@@ -93,10 +93,17 @@ class FallbackTests(RuntimeCase):
             with mock.patch.object(guide,'ai_select',side_effect=error):
                 r=self.call(guide,{'query':'전입신고'});self.assertEqual(r.status,200);self.assertEqual(r.json()['service_ids'][0],'MOVE-001');self.assertFalse(r.json()['used_ai'])
     def test_public_missing_key(self):
-        r=self.call(public_services,{'query':'청년 지원'});self.assertEqual(r.status,200);self.assertFalse(r.json()['configured'])
+        r=self.call(public_services,{'query':'청년 지원'});payload=r.json();self.assertEqual(r.status,200);self.assertFalse(payload['configured']);self.assertFalse(payload['available']);self.assertEqual(payload['status'],'not_configured');self.assertIn('정상 검색',payload['note'])
     def test_public_failure_local_safe(self):
         with mock.patch.dict(os.environ,{'PUBLIC_DATA_SERVICE_KEY':'test-only'}),mock.patch.object(public_services,'search_public_services',side_effect=TimeoutError()):
-            r=self.call(public_services,{'query':'청년 지원'});self.assertEqual(r.status,200);self.assertEqual(r.json()['services'],[])
+            r=self.call(public_services,{'query':'청년 지원'});payload=r.json();self.assertEqual(r.status,200);self.assertEqual(payload['services'],[]);self.assertEqual(payload['status'],'unavailable');self.assertFalse(payload['available'])
+    def test_public_success_with_zero_matches_is_still_available(self):
+        with mock.patch.dict(os.environ,{'PUBLIC_DATA_SERVICE_KEY':'test-only'}),mock.patch.object(public_services,'search_public_services',return_value=[]):
+            payload=self.call(public_services,{'query':'없는 지원'}).json();self.assertEqual(payload['status'],'ready');self.assertTrue(payload['available'])
+    def test_public_auth_error_is_distinct(self):
+        error=HTTPError('https://api.odcloud.kr',403,'forbidden',{},None)
+        with mock.patch.dict(os.environ,{'PUBLIC_DATA_SERVICE_KEY':'test-only'}),mock.patch.object(public_services,'search_public_services',side_effect=error):
+            payload=self.call(public_services,{'query':'청년 지원'}).json();self.assertEqual(payload['status'],'auth_error');self.assertFalse(payload['available']);self.assertNotIn('test-only',str(payload))
     def test_map_missing_key(self):self.assertEqual(self.call(address,{'address':'화성시 발안로 89'}).status,503)
     def test_geocode_failure(self):
         with mock.patch.object(address,'geocode_address',side_effect=TimeoutError('INTERNAL')):

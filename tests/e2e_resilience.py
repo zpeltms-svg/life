@@ -41,8 +41,19 @@ def run():
             assert page.locator('#center-result a').first.get_attribute('href').startswith('https://map.naver.com/')
             page.locator('#center-address').fill('향남읍');page.locator('#center-find').click()
             expect(page.locator('#center-result')).to_contain_text('향남읍 행정복지센터')
+            # User-reported address resolves offline to its verified jurisdiction.
+            page.locator('#center-address').fill('상신하길로 274');page.locator('#center-find').click()
+            expect(page.locator('#center-result')).to_contain_text('향남읍 행정복지센터')
+            expect(page.locator('#center-status')).to_contain_text('검증된 주소 자료')
             page.locator('#center-address').fill('화성시 발안로 89');page.locator('#center-find').click()
-            expect(page.locator('#center-status')).to_contain_text('읍·면·동을 직접 선택')
+            expect(page.locator('#center-status')).to_contain_text('지도 연동이 설정되지 않았습니다')
+            # Low-confidence and implausibly remote browser positions must not render misleading centers.
+            page.evaluate("()=>Object.defineProperty(navigator,'geolocation',{configurable:true,value:{getCurrentPosition:(ok)=>ok({coords:{latitude:37.17,longitude:127.10,accuracy:5000}})}})")
+            page.locator('#center-nearest').click();expect(page.locator('#center-status')).to_contain_text('정확도가 낮습니다')
+            assert page.locator('#center-result article').count()==0
+            page.evaluate("()=>Object.defineProperty(navigator,'geolocation',{configurable:true,value:{getCurrentPosition:(ok)=>ok({coords:{latitude:37.7,longitude:126.7,accuracy:10}})}})")
+            page.locator('#center-nearest').click();expect(page.locator('#center-status')).to_contain_text('너무 멉니다')
+            assert page.locator('#center-result article').count()==0
             # Explicitly deny location. No external lookup is needed for nearest centers.
             page.evaluate("()=>Object.defineProperty(navigator,'geolocation',{configurable:true,value:{getCurrentPosition:(ok,fail)=>fail({code:1})}})")
             page.locator('#center-nearest').click();expect(page.locator('#center-status')).to_contain_text('거부')
@@ -64,7 +75,7 @@ def run():
             page.screenshot(path=str(artifacts/f'detail-{width}.png'))
             page.keyboard.press('Escape')
             dims=page.evaluate('()=>({width:innerWidth,scroll:document.documentElement.scrollWidth})');assert dims['scroll']<=dims['width'],dims
-            rows.append({'width':width,'height':height,'ok':True,'overflow':False,'scenarios':13})
+            rows.append({'width':width,'height':height,'ok':True,'overflow':False,'scenarios':16})
             context.close()
         # Initial center data failure must leave local service search usable.
         context=browser.new_context();page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))

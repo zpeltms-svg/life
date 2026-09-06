@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "review_domains": 27,
+  "review_domains": 28,
   "rows": [
     {
       "review": 1,
@@ -12,7 +12,7 @@
       "review": 2,
       "domain": "문법",
       "ok": true,
-      "evidence": "all Python + 5 JavaScript files"
+      "evidence": "all Python + 6 JavaScript files"
     },
     {
       "review": 3,
@@ -64,102 +64,108 @@
     },
     {
       "review": 11,
+      "domain": "위치 신뢰도·상신하길로 관할 15회",
+      "ok": true,
+      "evidence": "{\"ok\":true,\"independent_runs\":15,\"assertions\":45}"
+    },
+    {
+      "review": 12,
       "domain": "개인정보 외부전송 차단",
       "ok": true,
       "evidence": "3 behavioral tests"
     },
     {
-      "review": 12,
+      "review": 13,
       "domain": "API 입력·오류 노출",
       "ok": true,
       "evidence": "10 behavioral tests"
     },
     {
-      "review": 13,
+      "review": 14,
       "domain": "호출제한·메모리 상한",
       "ok": true,
       "evidence": "3 behavioral tests"
     },
     {
-      "review": 14,
+      "review": 15,
       "domain": "AI 구조화·허용 ID",
       "ok": true,
       "evidence": "3 behavioral tests"
     },
     {
-      "review": 15,
+      "review": 16,
       "domain": "외부 API 장애 대응",
       "ok": true,
-      "evidence": "8 behavioral tests"
+      "evidence": "10 behavioral tests"
     },
     {
-      "review": 16,
+      "review": 17,
       "domain": "화성시 지역 필터",
       "ok": true,
       "evidence": "4 behavioral tests"
     },
     {
-      "review": 17,
+      "review": 18,
       "domain": "관할·길찾기",
       "ok": true,
       "evidence": "8 behavioral tests"
     },
     {
-      "review": 18,
+      "review": 19,
       "domain": "HTTP·CSP·파일노출 방어",
       "ok": true,
       "evidence": "6 behavioral tests"
     },
     {
-      "review": 19,
+      "review": 20,
       "domain": "접근성",
       "ok": true,
       "evidence": "labels, native controls, focus + browser keyboard/modal checks"
     },
     {
-      "review": 20,
+      "review": 21,
       "domain": "모바일 390",
       "ok": true,
-      "evidence": "390x844, 13 scenarios, page errors 0"
-    },
-    {
-      "review": 21,
-      "domain": "모바일 412",
-      "ok": true,
-      "evidence": "412x915, 13 scenarios, page errors 0"
+      "evidence": "390x844, 16 scenarios, page errors 0"
     },
     {
       "review": 22,
-      "domain": "태블릿 768",
+      "domain": "모바일 412",
       "ok": true,
-      "evidence": "768x1024, 13 scenarios, page errors 0"
+      "evidence": "412x915, 16 scenarios, page errors 0"
     },
     {
       "review": 23,
-      "domain": "데스크톱 1440",
+      "domain": "태블릿 768",
       "ok": true,
-      "evidence": "1440x900, 13 scenarios, page errors 0"
+      "evidence": "768x1024, 16 scenarios, page errors 0"
     },
     {
       "review": 24,
+      "domain": "데스크톱 1440",
+      "ok": true,
+      "evidence": "1440x900, 16 scenarios, page errors 0"
+    },
+    {
+      "review": 25,
       "domain": "배포 구성",
       "ok": true,
       "evidence": "4 entrypoints; private helper modules; JSON included"
     },
     {
-      "review": 25,
+      "review": 26,
       "domain": "문서",
       "ok": true,
       "evidence": "run / test / limitations / data maintenance documented"
     },
     {
-      "review": 26,
+      "review": 27,
       "domain": "의존성",
       "ok": true,
       "evidence": "Python local 3.12.10, deployment 3.13; pinned SDK + Playwright"
     },
     {
-      "review": 27,
+      "review": 28,
       "domain": "Secret 검사",
       "ok": true,
       "evidence": "no real credential patterns or private env files"

@@ -42,12 +42,12 @@
     </div></details></section>
     <section id="centers" class="center-finder shell" aria-labelledby="center-title">
       <p class="kicker">YOUR NEIGHBORHOOD OFFICE</p><h2 id="center-title">우리 집 관할센터는 어디일까요?</h2>
-      <p>주소로 관할을 확인하거나, 읍·면·동을 직접 선택하세요. 가까운 센터도 찾을 수 있어요.</p>
+      <p>주소로 관할을 확인하거나, 읍·면·동을 직접 선택하세요. 현재 위치는 정확도가 충분할 때 가장 가까운 1곳만 참고용으로 안내합니다.</p>
       <div class="center-layout"><div class="center-controls">
         <form id="center-form"><label for="center-address">화성시 주소 또는 읍·면·동</label><input id="center-address" maxlength="120" placeholder="예: 화성시 향남읍 발안로 89" autocomplete="off" required aria-describedby="center-privacy"><button id="center-find" type="submit">주소로 관할센터 찾기</button></form>
         <small id="center-privacy">주소 자동확인 시 입력 주소를 지도 제공업체에 전송합니다. 동·호수는 입력하지 마세요. 읍·면·동 직접 선택과 가까운 센터 계산은 기기에서 처리합니다.</small>
         <div><label for="center-area">읍·면·동 직접 선택</label><select id="center-area"><option value="">읍·면·동을 선택하세요</option></select></div>
-        <button id="center-nearest" type="button">현재 위치에서 가까운 센터 3곳</button>
+        <button id="center-nearest" type="button">현재 위치에서 가장 가까운 센터 1곳 (관할 아님)</button>
         <p id="center-status" role="status" aria-live="polite"></p>
       </div><div id="center-result" class="center-result" aria-live="polite"></div></div>
     </section>

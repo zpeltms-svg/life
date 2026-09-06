@@ -1,10 +1,10 @@
 # 화성생활 내비 품질 보고서
 
-- 실행 시각(UTC): 2026-09-06T16:30:11.648384+00:00
+- 실행 시각(UTC): 2026-09-06T22:49:04.530205+00:00
 - 대상: 이번 작업의 `hwaseong-life-navi` 구현본. 기존 제공 보고서의 통과 횟수는 재사용하지 않음.
-- 회귀테스트: **207개 PASS**
-- 전체 품질게이트: **7개 단계 PASS**
-- 서로 다른 품질영역 검토: **27개 PASS**
+- 회귀테스트: **210개 PASS**
+- 전체 품질게이트: **8개 단계 PASS**
+- 서로 다른 품질영역 검토: **28개 PASS**
 - 독립 백테스트: **15회 PASS**
 - 자연어 문장: **304개**
 - seed당 shuffle round: **15회**, 전체 **225회**
@@ -28,7 +28,7 @@
 ## 독립 품질영역
 
 1. 구조: PASS — required files present
-2. 문법: PASS — all Python + 5 JavaScript files
+2. 문법: PASS — all Python + 6 JavaScript files
 3. 서비스 스키마: PASS — 36 services
 4. 공식 URL 형식·기관: PASS — 61 official HTTPS links; HTTP content limitations in SOURCE_AUDIT
 5. 자료 유효기간: PASS — real dates + explicit unverified-content warnings
@@ -37,23 +37,24 @@
 8. 자연어 정답·오탐·상태격리: PASS — {"ok":true,"assertions":326,"cases":304}
 9. 클라이언트·서버 검색 일치: PASS — 304 frontend/server rankings identical
 10. 빠른 메뉴: PASS — 16 quick actions
-11. 개인정보 외부전송 차단: PASS — 3 behavioral tests
-12. API 입력·오류 노출: PASS — 10 behavioral tests
-13. 호출제한·메모리 상한: PASS — 3 behavioral tests
-14. AI 구조화·허용 ID: PASS — 3 behavioral tests
-15. 외부 API 장애 대응: PASS — 8 behavioral tests
-16. 화성시 지역 필터: PASS — 4 behavioral tests
-17. 관할·길찾기: PASS — 8 behavioral tests
-18. HTTP·CSP·파일노출 방어: PASS — 6 behavioral tests
-19. 접근성: PASS — labels, native controls, focus + browser keyboard/modal checks
-20. 모바일 390: PASS — 390x844, 13 scenarios, page errors 0
-21. 모바일 412: PASS — 412x915, 13 scenarios, page errors 0
-22. 태블릿 768: PASS — 768x1024, 13 scenarios, page errors 0
-23. 데스크톱 1440: PASS — 1440x900, 13 scenarios, page errors 0
-24. 배포 구성: PASS — 4 entrypoints; private helper modules; JSON included
-25. 문서: PASS — run / test / limitations / data maintenance documented
-26. 의존성: PASS — Python local 3.12.10, deployment 3.13; pinned SDK + Playwright
-27. Secret 검사: PASS — no real credential patterns or private env files
+11. 위치 신뢰도·상신하길로 관할 15회: PASS — {"ok":true,"independent_runs":15,"assertions":45}
+12. 개인정보 외부전송 차단: PASS — 3 behavioral tests
+13. API 입력·오류 노출: PASS — 10 behavioral tests
+14. 호출제한·메모리 상한: PASS — 3 behavioral tests
+15. AI 구조화·허용 ID: PASS — 3 behavioral tests
+16. 외부 API 장애 대응: PASS — 10 behavioral tests
+17. 화성시 지역 필터: PASS — 4 behavioral tests
+18. 관할·길찾기: PASS — 8 behavioral tests
+19. HTTP·CSP·파일노출 방어: PASS — 6 behavioral tests
+20. 접근성: PASS — labels, native controls, focus + browser keyboard/modal checks
+21. 모바일 390: PASS — 390x844, 16 scenarios, page errors 0
+22. 모바일 412: PASS — 412x915, 16 scenarios, page errors 0
+23. 태블릿 768: PASS — 768x1024, 16 scenarios, page errors 0
+24. 데스크톱 1440: PASS — 1440x900, 16 scenarios, page errors 0
+25. 배포 구성: PASS — 4 entrypoints; private helper modules; JSON included
+26. 문서: PASS — run / test / limitations / data maintenance documented
+27. 의존성: PASS — Python local 3.12.10, deployment 3.13; pinned SDK + Playwright
+28. Secret 검사: PASS — no real credential patterns or private env files
 
 ## 발견한 실패와 수정
 
@@ -78,7 +79,7 @@
 
 ## 패키징·무결성
 
-- 검증 소스 SHA-256: `fbeda4e90fae9434c313de1b3093ad65adbd1261e1150e2d996efd6548bc2b20`
+- 검증 소스 SHA-256: `8c62a0a0df097153dc0ed589acccd168d511d20f7225708918cb22f7844bb26c`
 - `tests/package_release.py`는 품질게이트 성공 후 ZIP을 만들고 CRC 검사·안전한 새 폴더 재해제·전체 품질게이트 재실행·소스 해시 대조를 수행한다.
 - 재해제까지 통과한 경우에만 최종 `hwaseong-life-navi-production.zip`으로 확정한다.
 - ZIP에 Git metadata, Python cache/pyc, 설치 도구, 실제 환경파일을 넣지 않는다.

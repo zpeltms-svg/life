@@ -38,8 +38,8 @@ def topology():
 def syntax():
     for p in ROOT.rglob('*.py'):
         if '__pycache__' not in p.parts:compile(p.read_text(encoding='utf-8'),str(p),'exec')
-    for name in ['app.js','search-core.js','js/centers.js','tests/search_contracts.js','tests/backtest_search.js']:command(['node','--check',name])
-    return 'all Python + 5 JavaScript files'
+    for name in ['app.js','search-core.js','js/centers.js','tests/search_contracts.js','tests/center_contracts.js','tests/backtest_search.js']:command(['node','--check',name])
+    return 'all Python + 6 JavaScript files'
 
 def services():
     rows=data('data/services.json')['services'];require(len(rows)>=30,'minimum 30')
@@ -83,7 +83,7 @@ def viewport(width):
     d=data('E2E_RESULTS.json');r=next(v for v in d['viewports'] if v['width']==width)
     require(d['ok'] and d['page_errors']==0 and r['ok'] and not r['overflow'],str(width))
     require((ROOT/f'tests/artifacts/home-{width}.png').is_file(),'screenshot evidence')
-    return f"{width}x{r['height']}, 13 scenarios, page errors 0"
+    return f"{width}x{r['height']}, {r['scenarios']} scenarios, page errors 0"
 
 def accessibility():
     h=read('index.html');css=read('style.css')+read('css/enhancements.css')
@@ -113,7 +113,10 @@ def secret_scan():
     findings=[]
     for p in ROOT.rglob('*'):
         if not p.is_file() or '__pycache__' in p.parts or p.suffix in ('.pyc','.png','.zip'):continue
-        if p.name.startswith('.env') and p.name!='.env.example':findings.append(str(p.relative_to(ROOT)));continue
+        if p.name.startswith('.env') and p.name!='.env.example':
+            ignored=subprocess.run(['git','-c',f'safe.directory={ROOT.as_posix()}','check-ignore','-q',str(p)],cwd=ROOT,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode==0
+            if not ignored:findings.append(str(p.relative_to(ROOT)))
+            continue
         try:t=p.read_text(encoding='utf-8')
         except UnicodeDecodeError:continue
         if re.search(r'sk-[A-Za-z0-9_-]{20,}',t):findings.append(str(p.relative_to(ROOT)))
@@ -125,6 +128,7 @@ def main():
       ('구조',topology),('문법',syntax),('서비스 스키마',services),('공식 URL 형식·기관',urls),('자료 유효기간',freshness),
       ('센터 좌표·이전주소',lambda:selected_tests('tests.test_runtime.CenterRuntimeTests.test_all_coordinates_and_sources','tests.test_runtime.CenterRuntimeTests.test_relocated_offices')),
       ('처리 순서',workflow),('자연어 정답·오탐·상태격리',lambda:command(['node','tests/search_contracts.js'])),('클라이언트·서버 검색 일치',parity),('빠른 메뉴',quick_menu),
+      ('위치 신뢰도·상신하길로 관할 15회',lambda:command(['node','tests/center_contracts.js'])),
       ('개인정보 외부전송 차단',lambda:selected_tests('tests.test_runtime.PrivacyRuntimeTests')),
       ('API 입력·오류 노출',lambda:selected_tests('tests.test_runtime.ApiInputTests')),
       ('호출제한·메모리 상한',lambda:selected_tests('tests.test_runtime.RateLimitTests')),

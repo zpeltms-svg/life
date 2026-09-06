@@ -180,13 +180,17 @@ def search_public_services(query, service_key):
     searches = searches[:5]
 
     candidates = {}
+    successful_requests = 0
+    failures = []
     with ThreadPoolExecutor(max_workers=len(searches)) as executor:
         futures = {executor.submit(fetch_page, service_key, condition, term): term for condition, term in searches}
         for future in as_completed(futures):
             term = futures[future]
             try:
                 items = future.result()
-            except (HTTPError, URLError, TimeoutError, json.JSONDecodeError, UnicodeDecodeError, ValueError, TypeError, AttributeError):
+                successful_requests += 1
+            except (HTTPError, URLError, TimeoutError, json.JSONDecodeError, UnicodeDecodeError, ValueError, TypeError, AttributeError) as error:
+                failures.append(error)
                 continue
             for item in items:
                 if not is_hwaseong_or_national(item):
@@ -200,6 +204,10 @@ def search_public_services(query, service_key):
                 previous = candidates.get(service_id)
                 if previous is None or score > previous[0]:
                     candidates[service_id] = (score, normalize_service(item, term))
+
+    if successful_requests == 0 and failures:
+        auth_error = next((error for error in failures if isinstance(error, HTTPError) and error.code in (401, 403)), None)
+        raise auth_error or failures[0]
 
     ranked = sorted(candidates.values(), key=lambda pair: (-pair[0], pair[1]["title"], pair[1]["id"]))
     return [service for _, service in ranked[:MAX_RESULTS]]
@@ -221,21 +229,31 @@ class handler(BaseHTTPRequestHandler):
             if not service_key:
                 return send_json(self, 200, {
                     "services": [], "configured": False,
-                    "note": "공공데이터 검색 키가 설정되지 않아 등록된 생활 파일만 검색했습니다.",
+                    "available": False,
+                    "status": "not_configured",
+                    "note": "등록된 공식 생활 파일을 정상 검색했습니다. 공공데이터 확장 검색은 선택 연동이며 현재 꺼져 있습니다.",
                 })
             try:
                 services = search_public_services(query, service_key)
                 note = "정부24 공공서비스 중 화성시·경기도·전국 적용 가능성이 있는 결과를 함께 검색했습니다."
+                status = "ready"
+                available = True
             except HTTPError as error:
                 services = []
                 note = "공공데이터 인증 정보를 확인해 주세요." if error.code in (401, 403) else "공공데이터 서버 응답을 확인해 주세요."
+                status = "auth_error" if error.code in (401, 403) else "server_error"
+                available = False
             except (URLError, TimeoutError):
                 services = []
                 note = "공공데이터 서버에 잠시 연결할 수 없습니다."
+                status = "unavailable"
+                available = False
             except Exception:
                 services = []
                 note = "공공데이터 검색 중 오류가 발생했습니다."
-            send_json(self, 200, {"services": services, "configured": True, "note": note})
+                status = "error"
+                available = False
+            send_json(self, 200, {"services": services, "configured": True, "available": available, "status": status, "note": note})
         except RequestError as error:
             send_error(self, error)
         except Exception:

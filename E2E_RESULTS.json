@@ -7,28 +7,28 @@
       "height": 844,
       "ok": true,
       "overflow": false,
-      "scenarios": 13
+      "scenarios": 16
     },
     {
       "width": 412,
       "height": 915,
       "ok": true,
       "overflow": false,
-      "scenarios": 13
+      "scenarios": 16
     },
     {
       "width": 768,
       "height": 1024,
       "ok": true,
       "overflow": false,
-      "scenarios": 13
+      "scenarios": 16
     },
     {
       "width": 1440,
       "height": 900,
       "ok": true,
       "overflow": false,
-      "scenarios": 13
+      "scenarios": 16
     }
   ],
   "data_failure_cases": 2,
