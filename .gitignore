@@ -5,3 +5,7 @@ __pycache__/
 *.pyc
 .DS_Store
 .vercel/
+
+# 로컬 전용 (이 PC의 사내 보안 게이트웨이 대응) — 배포 금지
+local-ca-bundle.pem
+_local_server.py
