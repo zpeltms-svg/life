@@ -49,6 +49,30 @@ window.LifeNaviCenters = (() => {
     const anchor = document.createElement('a'); anchor.textContent = label; anchor.href = url; anchor.target = '_blank'; anchor.rel = 'noopener noreferrer'; return anchor;
   }
 
+  function carDirectionsUrl(coords, center) {
+    return 'https://map.naver.com/p/directions/'
+      + coords.longitude + ',' + coords.latitude + ',' + encodeURIComponent('내 위치')
+      + '/' + center.lng + ',' + center.lat + ',' + encodeURIComponent(center.name)
+      + '/-/car';
+  }
+
+  function renderNearestList(target, list, coords) {
+    target.replaceChildren();
+    list.forEach((center, index) => {
+      const box = document.createElement('article');
+      const title = document.createElement('h3');
+      title.textContent = (index === 0 ? '가장 가까운 센터' : (index + 1) + '순위') + ' · ' + center.name;
+      const address = document.createElement('p'); address.textContent = center.address;
+      const dist = document.createElement('p'); dist.textContent = '현재 위치에서 직선거리 약 ' + center.distance.toFixed(1) + 'km';
+      const links = document.createElement('div'); links.className = 'center-links';
+      links.append(link('네이버 길찾기 ↗', carDirectionsUrl(coords, center)));
+      const phone = document.createElement('a'); phone.href = 'tel:15774200'; phone.textContent = '민원안내 1577-4200';
+      links.append(phone);
+      box.append(title, address, dist, links);
+      target.append(box);
+    });
+  }
+
   function renderCenter(target, center, heading = '선택한 센터') {
     target.replaceChildren();
     const title = document.createElement('h3'); title.textContent = heading + ' · ' + center.name;
@@ -87,12 +111,15 @@ window.LifeNaviCenters = (() => {
       const button=event.currentTarget; button.disabled=true; status.textContent='현재 위치를 확인하고 있습니다…'; output.replaceChildren(); select.value='';
       try {
         const {coords}=await locate();
-        const center=trustedNearest(coords,centers);
-        select.value=center.area;
-        renderCenter(output,center,'현재 위치에서 가장 가까운 센터');
-        status.textContent=center.accuracyLow
-          ? '현재 위치에서 직선거리가 가장 가까운 행정복지센터입니다. 기기 위치가 부정확할 수 있어 주소지 관할과 다를 수 있습니다.'
-          : '기기 위치 정확도 약 ±' + Math.round(center.locationAccuracy) + 'm 기준으로 계산했습니다. 이 결과는 주소지 관할 판정이 아닙니다.';
+        const list=nearest(coords,centers,3);
+        if(!list.length){const error=new Error('현재 위치 좌표를 확인하지 못했습니다. 주소를 입력해 주세요.');error.code='LOCATION_INVALID';throw error;}
+        select.value=list[0].area;
+        renderNearestList(output,list,coords);
+        const accuracy=Number(coords?.accuracy);
+        const accuracyLow=!(Number.isFinite(accuracy)&&accuracy>0&&accuracy<=MAX_LOCATION_ACCURACY_METERS);
+        status.textContent=accuracyLow
+          ? '현재 위치에서 가까운 순서로 3곳입니다. 기기 위치가 부정확할 수 있으니 실제로 가까운 센터를 골라 길찾기하세요. 관할 판정은 아닙니다.'
+          : '현재 위치에서 가까운 순서로 3곳입니다. 관할센터 판정은 아닙니다.';
       } catch(error) {
         status.textContent=error.code===1?'위치 사용이 거부되었습니다. 주소를 입력하거나 읍·면·동을 직접 선택해 주세요.':(error.message || '위치를 확인하지 못했습니다. 주소를 입력해 주세요.');
       } finally {button.disabled=false;}
