@@ -29,6 +29,58 @@
     return normalizeText(value).replace(/\s+/g, '');
   }
 
+  // 사용자 문장과 등록 서비스 설명에서 같은 생활 개념이 확인될 때만 점수화한다.
+  // 짧은 구어체를 서비스 ID에 바로 연결하지 않아 새 서비스나 행정 사실을 만들지 않는다.
+  const SEMANTIC_CONCEPTS = [
+    ['move', 12, [/(?:이사|이삿짐|전입|새집|새거주지|거주지를옮|주소.*이전)/]],
+    ['birth', 11, [/(?:아기|아이|신생아).*(?:태어|낳)|(?:출산|출생)/]],
+    ['job', 8, [/(?:취업|구직|일자리|인턴|채용)/]],
+    ['startup', 11, [/(?:창업|가게를?열|사업을?시작|사업장)/]],
+    ['bulky_waste', 14, [/(?:소파|침대|장롱|책상|냉장고|세탁기|가구).*(?:버리|치우|폐기|처분)|(?:대형폐기물|폐가구|큰쓰레기)/]],
+    ['pet', 9, [/(?:반려동물|강아지|고양이|애완동물)/]],
+    ['animal_care', 10, [/(?:동물병원|진료비|아프|예방접종|예방주사|백신|광견병|내장칩)/]],
+    ['animal_vaccine', 16, [/(?:광견병|내장칩|종합백신)/]],
+    ['passport', 14, [/(?:여권)/]],
+    ['renewal', 9, [/(?:재발급|갱신|만료|기한이?끝|잃어버|분실)/]],
+    ['resident_record', 13, [/(?:주민등록표?|등본|초본|주소이력)/]],
+    ['family_certificate', 14, [/(?:가족관계|기본증명서|혼인관계증명서|가족.*증명.*서류)/]],
+    ['seal_certificate', 14, [/(?:인감증명|인감서류)/]],
+    ['signature_certificate', 14, [/(?:본인서명|서명사실)/]],
+    ['marriage', 14, [/(?:혼인신고|결혼.*신고|혼인등록)/]],
+    ['death_report', 14, [/(?:사망신고|사망.*등록)/]],
+    ['lease_report', 13, [/(?:임대차|전월세|전세|월세).*(?:계약|신고)/]],
+    ['fixed_date', 15, [/(?:확정일자)/]],
+    ['building_register', 15, [/(?:건축물대장|건물대장)/]],
+    ['land_register', 15, [/(?:토지대장|임야대장)/]],
+    ['local_tax_certificate', 15, [/(?:지방세|세금).*(?:완납|납세증명|체납없)/]],
+    ['vehicle_tax', 15, [/(?:자동차세|차량세금|차세금)/]],
+    ['vehicle_registration', 15, [/(?:자동차|차량|차).*(?:등록증)/]],
+    ['health_certificate', 15, [/(?:보건증|건강진단결과서)/]],
+    ['vaccination', 11, [/(?:예방접종|예방주사|접종병원|위탁의료기관)/]],
+    ['water_bill', 15, [/(?:상하수도|수도).*(?:요금|세|납부|자동이체)/]],
+    ['kiosk', 15, [/(?:무인민원|무인발급|24시간.*(?:등본|증명서)|주말.*(?:등본|증명서)|야간.*(?:등본|증명서))/]],
+    ['complaint', 10, [/(?:국민신문고|고충민원|민원.*(?:넣|접수|신청))/]],
+    ['call_center', 12, [/(?:담당부서.*모르|어디에문의|민원.*전화|시청전화|콜센터)/]],
+    ['disability_parking', 15, [/(?:장애인).*(?:주차표지|주차증|차량표지|자동차표지)/]],
+    ['ev_subsidy', 15, [/(?:전기차|전기자동차).*(?:보조금|지원금|구매지원)/]],
+    ['parking_fine', 15, [/(?:주정차|주차).*(?:과태료|단속|위반|의견진술|이의신청)/]],
+    ['admin_center', 11, [/(?:주민센터|행정복지센터).*(?:어디|찾|위치|관할)|(?:관할).*(?:주민센터|행정복지센터)/]],
+  ];
+  const CONTEXT_CONCEPTS = new Set(['renewal', 'animal_care']);
+
+  function semanticConcepts(value = '') {
+    const compact = compactText(value);
+    const found = new Map();
+    for (const [name, weight, patterns] of SEMANTIC_CONCEPTS) {
+      if (patterns.some(pattern => pattern.test(compact))) found.set(name, weight);
+    }
+    return found;
+  }
+
+  function serviceSearchText(service) {
+    return [service.title, ...(service.intent_groups || []).flat(), ...(service.semantic_phrases || [])].join(' ');
+  }
+
   function containsSensitiveInfo(value = '') {
     const text = String(value).normalize('NFKC').replace(/[\u200b-\u200f\u2060\ufeff]/g, '').replace(/[\u2010-\u2015\u2212]/g, '-');
     return SENSITIVE_PATTERNS.some((pattern) => {
@@ -61,6 +113,23 @@
 
     if (title && normalized.includes(title)) score += 14;
     if (titleCompact && compact.includes(titleCompact)) score += 14;
+
+    // 상품 추천이나 민간 서류처럼 기존 행정서비스 범위가 아닌 문구는 의미 확장을 하지 않는다.
+    const queryConcepts = /(?:취업증명서|사업자등록증|추천|구매|보험|사진관|도장가게|충전소|충전기|배관공사|디자인|투자상담|무엇인가|원리.*궁금|뜻이.*궁금)/.test(compact)
+      ? new Map()
+      : semanticConcepts(query);
+    const serviceConcepts = semanticConcepts(serviceSearchText(service));
+    const matchedConcepts = [...queryConcepts].filter(([concept]) => serviceConcepts.has(concept));
+    let conceptMatches = 0;
+    for (const [concept, weight] of matchedConcepts) {
+      // '재발급', '아프다' 같은 문맥어 하나만으로 다른 업무를 추천하지 않는다.
+      if (CONTEXT_CONCEPTS.has(concept) && matchedConcepts.length < 2) continue;
+      score += weight;
+      conceptMatches += 1;
+    }
+    if (conceptMatches >= 2) score += 10;
+    // 사용자가 갱신·분실·만료를 명시했으면 일반 신규 발급 결과를 약하게 만든다.
+    if (queryConcepts.has('renewal') && !serviceConcepts.has('renewal')) score -= 12;
 
     const seen = new Set();
     for (const rawKeyword of service.keywords || []) {

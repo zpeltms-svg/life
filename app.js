@@ -350,7 +350,7 @@ async function showRoute(button, destinationQuery = '', originOverride = null, d
         destination_query: destinationQuery,
         origin: { latitude: coords.latitude, longitude: coords.longitude },
       }),
-    }, 12000);
+    }, 25000);
 
     const minutes = Math.max(1, Math.round(Number(route.duration_ms) / 60000));
     const kilometers = (Number(route.distance_m) / 1000).toFixed(1);
@@ -687,6 +687,7 @@ form.addEventListener('submit', async (event) => {
     }
     if (requestId !== searchSequence) return;
 
+    // 검증 가능한 로컬 순위를 유지하고 AI는 누락된 문맥 후보만 보완한다.
     const localFound = SearchCore.mergeUniqueServices(localRetrieve(query), aiResult?.services || []).slice(0, 6);
     const publicFound = Array.isArray(publicResult.services) ? publicResult.services : [];
     const found = SearchCore.mergeUniqueServices(localFound, publicFound).sort((a,b) => SearchCore.actionRank(query,a)-SearchCore.actionRank(query,b)).slice(0, 8);

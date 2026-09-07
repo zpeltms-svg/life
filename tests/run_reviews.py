@@ -3,6 +3,7 @@ import hashlib
 import io
 import json
 import re
+import shutil
 import subprocess
 import sys
 import unittest
@@ -114,7 +115,13 @@ def secret_scan():
     for p in ROOT.rglob('*'):
         if not p.is_file() or '__pycache__' in p.parts or p.suffix in ('.pyc','.png','.zip'):continue
         if p.name.startswith('.env') and p.name!='.env.example':
-            ignored=subprocess.run(['git','-c',f'safe.directory={ROOT.as_posix()}','check-ignore','-q',str(p)],cwd=ROOT,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode==0
+            git = shutil.which('git')
+            if git:
+                ignored=subprocess.run([git,'-c',f'safe.directory={ROOT.as_posix()}','check-ignore','-q',str(p)],cwd=ROOT,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode==0
+            else:
+                # 배포 검증 PC에 Git이 없어도 명시적인 환경파일 제외 규칙은 확인한다.
+                ignore_rules={line.strip() for line in read('.gitignore').splitlines() if line.strip() and not line.lstrip().startswith('#')}
+                ignored=p.name in ignore_rules or '.env*' in ignore_rules
             if not ignored:findings.append(str(p.relative_to(ROOT)))
             continue
         try:t=p.read_text(encoding='utf-8')

@@ -10,11 +10,12 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 GENERATED={'QUALITY_GATE_RESULTS.json','QUALITY_REPORT.md','BACKTEST_RESULTS.json','REVIEW_RESULTS.json','E2E_RESULTS.json','PACKAGE_RESULTS.json'}
+LOCAL_ONLY={'local-ca-bundle.pem','_local_server.py'}
 
 def fingerprint(root=ROOT):
     digest=hashlib.sha256()
     for p in sorted(root.rglob('*')):
-        if not p.is_file() or '__pycache__' in p.parts or '.git' in p.parts or p.name in GENERATED or p.suffix in ('.pyc','.png','.zip','.sha256') or p.name.startswith('REVIEW_RESULTS_') or (p.name.startswith('.env') and p.name != '.env.example'):continue
+        if not p.is_file() or '__pycache__' in p.parts or '.git' in p.parts or p.name in GENERATED or p.name in LOCAL_ONLY or p.suffix in ('.pyc','.png','.zip','.sha256') or p.name.startswith('REVIEW_RESULTS_') or (p.name.startswith('.env') and p.name != '.env.example'):continue
         digest.update(p.relative_to(root).as_posix().encode());digest.update(p.read_bytes())
     return digest.hexdigest()
 

@@ -1,14 +1,14 @@
 # 화성생활 내비 품질 보고서
 
-- 실행 시각(UTC): 2026-09-06T22:49:04.530205+00:00
+- 실행 시각(UTC): 2026-09-07T07:44:20.660853+00:00
 - 대상: 이번 작업의 `hwaseong-life-navi` 구현본. 기존 제공 보고서의 통과 횟수는 재사용하지 않음.
 - 회귀테스트: **210개 PASS**
 - 전체 품질게이트: **8개 단계 PASS**
 - 서로 다른 품질영역 검토: **28개 PASS**
 - 독립 백테스트: **15회 PASS**
-- 자연어 문장: **304개**
+- 자연어 문장: **321개**
 - seed당 shuffle round: **15회**, 전체 **225회**
-- 백테스트 assertion: **171,900회 PASS**
+- 백테스트 assertion: **181,575회 PASS**
 - seed: `20260907, 314159, 271828, 8675309, 424242, 999983, 13579, 24680, 112358, 161803, 777777, 888888, 123457, 765431, 555551`
 - E2E: 실제 HTTP 및 CSP 기반 기본 시나리오 PASS, 장애·개인정보·모바일 시나리오 PASS
 - 브라우저 page error: **0건**
@@ -34,10 +34,10 @@
 5. 자료 유효기간: PASS — real dates + explicit unverified-content warnings
 6. 센터 좌표·이전주소: PASS — 2 behavioral tests
 7. 처리 순서: PASS — registration -> city benefit -> voucher -> parental -> child allowance
-8. 자연어 정답·오탐·상태격리: PASS — {"ok":true,"assertions":326,"cases":304}
-9. 클라이언트·서버 검색 일치: PASS — 304 frontend/server rankings identical
+8. 자연어 정답·오탐·상태격리: PASS — {"ok":true,"assertions":343,"cases":321}
+9. 클라이언트·서버 검색 일치: PASS — 321 frontend/server rankings identical
 10. 빠른 메뉴: PASS — 16 quick actions
-11. 위치 신뢰도·상신하길로 관할 15회: PASS — {"ok":true,"independent_runs":15,"assertions":45}
+11. 위치 신뢰도·상신하길로 관할 15회: PASS — {"ok":true,"independent_runs":15,"assertions":47}
 12. 개인정보 외부전송 차단: PASS — 3 behavioral tests
 13. API 입력·오류 노출: PASS — 10 behavioral tests
 14. 호출제한·메모리 상한: PASS — 3 behavioral tests
@@ -47,10 +47,10 @@
 18. 관할·길찾기: PASS — 8 behavioral tests
 19. HTTP·CSP·파일노출 방어: PASS — 6 behavioral tests
 20. 접근성: PASS — labels, native controls, focus + browser keyboard/modal checks
-21. 모바일 390: PASS — 390x844, 16 scenarios, page errors 0
-22. 모바일 412: PASS — 412x915, 16 scenarios, page errors 0
-23. 태블릿 768: PASS — 768x1024, 16 scenarios, page errors 0
-24. 데스크톱 1440: PASS — 1440x900, 16 scenarios, page errors 0
+21. 모바일 390: PASS — 390x844, 18 scenarios, page errors 0
+22. 모바일 412: PASS — 412x915, 18 scenarios, page errors 0
+23. 태블릿 768: PASS — 768x1024, 18 scenarios, page errors 0
+24. 데스크톱 1440: PASS — 1440x900, 18 scenarios, page errors 0
 25. 배포 구성: PASS — 4 entrypoints; private helper modules; JSON included
 26. 문서: PASS — run / test / limitations / data maintenance documented
 27. 의존성: PASS — Python local 3.12.10, deployment 3.13; pinned SDK + Playwright
@@ -79,7 +79,7 @@
 
 ## 패키징·무결성
 
-- 검증 소스 SHA-256: `8c62a0a0df097153dc0ed589acccd168d511d20f7225708918cb22f7844bb26c`
+- 검증 소스 SHA-256: `ce856e6e3712e1af5e091f6aa8e4ca62b9d85331cc821110799d8891d83fd6bb`
 - `tests/package_release.py`는 품질게이트 성공 후 ZIP을 만들고 CRC 검사·안전한 새 폴더 재해제·전체 품질게이트 재실행·소스 해시 대조를 수행한다.
 - 재해제까지 통과한 경우에만 최종 `hwaseong-life-navi-production.zip`으로 확정한다.
 - ZIP에 Git metadata, Python cache/pyc, 설치 도구, 실제 환경파일을 넣지 않는다.

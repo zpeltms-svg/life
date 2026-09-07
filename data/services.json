@@ -422,6 +422,11 @@
         "취약계층 반려동물",
         "반려동물 진료센터"
       ],
+      "semantic_phrases": [
+        "광견병",
+        "종합백신",
+        "내장칩"
+      ],
       "official_status": "verified",
       "review_after_days": 60,
       "action_group": "benefit",

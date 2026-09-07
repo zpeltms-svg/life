@@ -48,13 +48,13 @@
       "review": 8,
       "domain": "자연어 정답·오탐·상태격리",
       "ok": true,
-      "evidence": "{\"ok\":true,\"assertions\":326,\"cases\":304}"
+      "evidence": "{\"ok\":true,\"assertions\":343,\"cases\":321}"
     },
     {
       "review": 9,
       "domain": "클라이언트·서버 검색 일치",
       "ok": true,
-      "evidence": "304 frontend/server rankings identical"
+      "evidence": "321 frontend/server rankings identical"
     },
     {
       "review": 10,
@@ -66,7 +66,7 @@
       "review": 11,
       "domain": "위치 신뢰도·상신하길로 관할 15회",
       "ok": true,
-      "evidence": "{\"ok\":true,\"independent_runs\":15,\"assertions\":45}"
+      "evidence": "{\"ok\":true,\"independent_runs\":15,\"assertions\":47}"
     },
     {
       "review": 12,
