@@ -58,13 +58,15 @@ def run():
             expect(page.locator('.welfare-center-panel a[href^="nmap://route/car"]')).to_be_visible()
             expect(page.locator('.welfare-center-panel a[href^="https://map.naver.com/"]')).to_be_visible()
             page.keyboard.press('Escape')
-            # Low-confidence and implausibly remote browser positions must not render misleading centers.
+            # Any usable browser position returns the nearest center; low confidence is flagged, not blocked.
             page.evaluate("()=>Object.defineProperty(navigator,'geolocation',{configurable:true,value:{getCurrentPosition:(ok)=>ok({coords:{latitude:37.17,longitude:127.10,accuracy:5000}})}})")
-            page.locator('#center-nearest').click();expect(page.locator('#center-status')).to_contain_text('정확도가 낮습니다')
-            assert page.locator('#center-result article').count()==0
+            page.locator('#center-nearest').click()
+            expect(page.locator('#center-status')).to_contain_text('부정확할 수 있어')
+            expect(page.locator('#center-result h3')).to_contain_text('현재 위치에서 가장 가까운 센터')
             page.evaluate("()=>Object.defineProperty(navigator,'geolocation',{configurable:true,value:{getCurrentPosition:(ok)=>ok({coords:{latitude:37.7,longitude:126.7,accuracy:10}})}})")
-            page.locator('#center-nearest').click();expect(page.locator('#center-status')).to_contain_text('너무 멉니다')
-            assert page.locator('#center-result article').count()==0
+            page.locator('#center-nearest').click()
+            expect(page.locator('#center-status')).to_contain_text('관할 판정이 아닙니다')
+            expect(page.locator('#center-result h3')).to_contain_text('현재 위치에서 가장 가까운 센터')
             # Explicitly deny location. No external lookup is needed for nearest centers.
             page.evaluate("()=>Object.defineProperty(navigator,'geolocation',{configurable:true,value:{getCurrentPosition:(ok,fail)=>fail({code:1})}})")
             page.locator('#center-nearest').click();expect(page.locator('#center-status')).to_contain_text('거부')

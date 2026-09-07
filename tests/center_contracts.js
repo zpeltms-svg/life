@@ -28,8 +28,10 @@ equal(Center.nearest(exact, centers).length, 1, 'default exposes one result');
 equal(Center.nearest(exact, centers)[0].area, '향남읍', 'nearest exact center');
 equal(Center.nearest(exact, centers, 3).length, 3, 'explicit diagnostic limit');
 equal(Center.trustedNearest(exact, centers).area, '향남읍', 'trusted exact center');
-throwsCode(() => Center.trustedNearest({...exact, accuracy:2500}, centers), 'LOCATION_INACCURATE');
-throwsCode(() => Center.trustedNearest({latitude:37.7, longitude:126.7, accuracy:10}, centers), 'LOCATION_OUTSIDE_COVERAGE');
+equal(Center.trustedNearest(exact, centers).accuracyLow, false, 'good accuracy is not flagged');
+equal(Center.trustedNearest({...exact, accuracy:2500}, centers).area, '향남읍', 'low accuracy still returns the nearest center');
+equal(Center.trustedNearest({...exact, accuracy:2500}, centers).accuracyLow, true, 'low accuracy is flagged, not thrown');
+equal(Center.trustedNearest({latitude:37.7, longitude:126.7, accuracy:10}, centers).accuracyLow, false, 'far but valid coordinates still resolve to nearest');
 throwsCode(() => Center.trustedNearest({latitude:0, longitude:0, accuracy:10}, centers), 'LOCATION_INVALID');
 
 // 15 independent order perturbations: center choice must never depend on source ordering.

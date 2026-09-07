@@ -1,7 +1,6 @@
 'use strict';
 window.LifeNaviCenters = (() => {
   const MAX_LOCATION_ACCURACY_METERS = 2000;
-  const MAX_NEAREST_DISTANCE_KM = 12;
   const VERIFIED_ROAD_AREAS = Object.freeze([
     { road: '상신하길로', area: '향남읍' },
   ]);
@@ -32,23 +31,18 @@ window.LifeNaviCenters = (() => {
 
   function trustedNearest(coords, centers) {
     const accuracy = Number(coords?.accuracy);
-    if (!Number.isFinite(accuracy) || accuracy <= 0 || accuracy > MAX_LOCATION_ACCURACY_METERS) {
-      const error = new Error('현재 위치의 정확도가 낮습니다. 상신하길로 274처럼 주소를 입력해 관할센터를 확인해 주세요.');
-      error.code = 'LOCATION_INACCURATE';
-      throw error;
-    }
     const center = nearest(coords, centers, 1)[0];
     if (!center) {
       const error = new Error('현재 위치 좌표를 확인하지 못했습니다. 주소를 입력해 주세요.');
       error.code = 'LOCATION_INVALID';
       throw error;
     }
-    if (center.distance > MAX_NEAREST_DISTANCE_KM) {
-      const error = new Error('받은 현재 위치가 화성시 생활권과 너무 멉니다. 기기 위치를 다시 확인하거나 주소를 입력해 주세요.');
-      error.code = 'LOCATION_OUTSIDE_COVERAGE';
-      throw error;
-    }
-    return {...center, locationAccuracy: accuracy};
+    const hasAccuracy = Number.isFinite(accuracy) && accuracy > 0;
+    return {
+      ...center,
+      locationAccuracy: hasAccuracy ? accuracy : null,
+      accuracyLow: !hasAccuracy || accuracy > MAX_LOCATION_ACCURACY_METERS,
+    };
   }
 
   function link(label, url) {
@@ -90,12 +84,15 @@ window.LifeNaviCenters = (() => {
       finally {button.disabled=false;}
     });
     document.querySelector('#center-nearest').addEventListener('click',async event=>{
-      const button=event.currentTarget; button.disabled=true; status.textContent='정확한 현재 위치를 확인하고 있습니다…'; output.replaceChildren(); select.value='';
+      const button=event.currentTarget; button.disabled=true; status.textContent='현재 위치를 확인하고 있습니다…'; output.replaceChildren(); select.value='';
       try {
         const {coords}=await locate();
         const center=trustedNearest(coords,centers);
+        select.value=center.area;
         renderCenter(output,center,'현재 위치에서 가장 가까운 센터');
-        status.textContent='기기 위치 정확도 약 ±' + Math.round(center.locationAccuracy) + 'm로 계산했습니다. 이 결과는 주소지 관할 판정이 아닙니다.';
+        status.textContent=center.accuracyLow
+          ? '현재 위치에서 직선거리가 가장 가까운 행정복지센터입니다. 기기 위치가 부정확할 수 있어 주소지 관할과 다를 수 있습니다.'
+          : '기기 위치 정확도 약 ±' + Math.round(center.locationAccuracy) + 'm 기준으로 계산했습니다. 이 결과는 주소지 관할 판정이 아닙니다.';
       } catch(error) {
         status.textContent=error.code===1?'위치 사용이 거부되었습니다. 주소를 입력하거나 읍·면·동을 직접 선택해 주세요.':(error.message || '위치를 확인하지 못했습니다. 주소를 입력해 주세요.');
       } finally {button.disabled=false;}
