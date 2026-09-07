@@ -31,7 +31,22 @@ AUDIENCE_ALIASES = {
 STOPWORDS = {
     "지원", "서비스", "혜택", "신청", "정보", "필요", "관련", "받고", "싶어요", "있나요",
     "알려줘", "알려주세요", "도와줘", "도움", "대한", "어떤", "화성", "화성시", "화성특례시",
+    "예정", "예정이에요", "알고", "알고싶어요", "알고싶습니다", "싶습니다", "궁금", "궁금해요",
+    "정책", "정책을", "하려고", "합니다", "인데", "우리", "저는", "제가",
 }
+QUERY_TOKEN_RE = re.compile(r"[가-힣A-Za-z0-9]{2,}")
+
+
+def meaningful_query_tokens(query):
+    return {token for token in QUERY_TOKEN_RE.findall(query or "") if token not in STOPWORDS}
+
+
+def query_token_hits(item, tokens):
+    blob = " ".join(
+        str(item.get(key) or "")
+        for key in ("서비스명", "지원대상", "선정기준", "서비스목적요약", "지원내용")
+    )
+    return sum(1 for token in tokens if token in blob)
 CENTRAL_MARKERS = ("중앙행정기관", "공공기관", "중앙부처")
 LOCAL_TYPE_MARKERS = ("지방자치단체", "지자체", "광역자치단체", "기초자치단체")
 OTHER_LOCAL_RE = re.compile(r"(서울특별시|부산광역시|대구광역시|인천광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|제주특별자치도|(?<!화성)(?:수원|용인|성남|고양|부천|안산|안양|평택|시흥|김포|광명|광주|군포|하남|오산|이천|안성|의왕|양평|여주|과천|의정부|남양주|파주|양주|구리|포천|동두천)[시군구])")
@@ -172,6 +187,7 @@ def relevance_score(item, query, matched_term):
 
 def search_public_services(query, service_key):
     audiences, names = search_terms(query)
+    query_tokens = meaningful_query_tokens(query)
     searches = [("사용자구분", term) for term in audiences]
     searches.extend(("서비스명", term) for term in audiences)
     searches.extend(("서비스명", term) for term in names)
@@ -200,6 +216,10 @@ def search_public_services(query, service_key):
                     continue
                 score = relevance_score(item, query, term)
                 if score < MIN_RELEVANCE_SCORE:
+                    continue
+                # 여러 단어로 물어본 질문은, 결과 본문에 그 단어가 2개 이상 실제로 나와야 채택한다.
+                # ("결혼" 한 단어만 걸려 결혼이민 사업이 뜨는 식의 엉뚱한 매칭을 걸러낸다.)
+                if len(query_tokens) >= 2 and query_token_hits(item, query_tokens) < 2:
                     continue
                 previous = candidates.get(service_id)
                 if previous is None or score > previous[0]:
