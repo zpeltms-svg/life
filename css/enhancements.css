@@ -14,7 +14,7 @@
 .center-result h3{font-size:19px;margin:0 0 10px}.center-result p{line-height:1.7;overflow-wrap:anywhere}
 .center-links{display:flex;flex-wrap:wrap;gap:8px}.center-links a,.route-fallback{display:inline-flex;align-items:center;min-height:44px;padding:8px 12px;border:1px solid #536e49;border-radius:8px;color:#243e1f;font-size:14px;background:#fff}
 #center-status{min-height:24px;line-height:1.7;font-size:14px}
-.more-quick{margin-top:16px}.more-quick summary{cursor:pointer;min-height:44px;font-weight:700;padding:12px}.more-quick .popular-grid{margin-top:8px}
+.more-quick{margin-top:28px}.more-quick summary{cursor:pointer;min-height:44px;font-weight:700;padding:14px 2px;color:var(--white);border-top:1px solid rgba(255,255,255,.26)}.more-quick .popular-grid{margin-top:22px}
 .detail-grid dd{overflow-wrap:anywhere}.detail-grid dd ul{padding-left:20px}.task-checklist{padding:18px;background:#eef3e8;border-radius:12px}.task-checklist h3{margin:0 0 12px}.task-checklist label{display:flex;align-items:flex-start;gap:10px;min-height:44px;padding:8px 0;line-height:1.6}.task-checklist input{width:20px;height:20px;flex:0 0 20px;margin-top:3px}
 .print-detail{min-height:44px;margin-top:16px;padding:10px 16px;border:1px solid currentColor;border-radius:6px;background:white;font:inherit;cursor:pointer}
 button:disabled{cursor:wait;opacity:.65}a,button,input,select,textarea,summary{-webkit-tap-highlight-color:transparent}
