@@ -48,7 +48,7 @@ def run():
             page.locator('#center-address').fill('화성시 발안로 89');page.locator('#center-find').click()
             expect(page.locator('#center-status')).to_contain_text('지도 연동이 설정되지 않았습니다')
             # Current-position fallback and selected-center navigation work without Naver API credentials.
-            page.evaluate("()=>Object.defineProperty(navigator,'geolocation',{configurable:true,value:{getCurrentPosition:(ok)=>ok({coords:{latitude:37.1324,longitude:126.9203,accuracy:15}})}})")
+            page.evaluate("()=>Object.defineProperty(navigator,'geolocation',{configurable:true,value:{getCurrentPosition:(ok)=>ok({coords:{latitude:37.1324,longitude:126.9203,accuracy:15}}),watchPosition:(ok)=>{ok({coords:{latitude:37.1324,longitude:126.9203,accuracy:15}});return 1;},clearWatch:()=>{}}})")
             page.locator('button[data-id="BIRTH-002"]').click()
             page.locator('.current-address-btn').click()
             expect(page.locator('.welfare-area-select')).to_have_value('향남읍')
@@ -59,18 +59,18 @@ def run():
             expect(page.locator('.welfare-center-panel a[href^="https://map.naver.com/"]')).to_be_visible()
             page.keyboard.press('Escape')
             # Any usable browser position lists the nearest centers with direct route links; low confidence is flagged, not blocked.
-            page.evaluate("()=>Object.defineProperty(navigator,'geolocation',{configurable:true,value:{getCurrentPosition:(ok)=>ok({coords:{latitude:37.17,longitude:127.10,accuracy:5000}})}})")
+            page.evaluate("()=>Object.defineProperty(navigator,'geolocation',{configurable:true,value:{getCurrentPosition:(ok)=>ok({coords:{latitude:37.17,longitude:127.10,accuracy:5000}}),watchPosition:(ok)=>{ok({coords:{latitude:37.17,longitude:127.10,accuracy:5000}});return 1;},clearWatch:()=>{}}})")
             page.locator('#center-nearest').click()
+            expect(page.locator('#center-result article')).to_have_count(3, timeout=9000)
             expect(page.locator('#center-status')).to_contain_text('부정확할 수 있으니')
             expect(page.locator('#center-result h3').first).to_contain_text('가장 가까운 센터')
-            assert page.locator('#center-result article').count() == 3
             assert page.locator('#center-result a[href*="map.naver.com/p/directions"]').count() >= 1
-            page.evaluate("()=>Object.defineProperty(navigator,'geolocation',{configurable:true,value:{getCurrentPosition:(ok)=>ok({coords:{latitude:37.7,longitude:126.7,accuracy:10}})}})")
+            page.evaluate("()=>Object.defineProperty(navigator,'geolocation',{configurable:true,value:{getCurrentPosition:(ok)=>ok({coords:{latitude:37.7,longitude:126.7,accuracy:10}}),watchPosition:(ok)=>{ok({coords:{latitude:37.7,longitude:126.7,accuracy:10}});return 1;},clearWatch:()=>{}}})")
             page.locator('#center-nearest').click()
             expect(page.locator('#center-status')).to_contain_text('관할센터 판정은 아닙니다')
             expect(page.locator('#center-result h3').first).to_contain_text('가장 가까운 센터')
             # Explicitly deny location. No external lookup is needed for nearest centers.
-            page.evaluate("()=>Object.defineProperty(navigator,'geolocation',{configurable:true,value:{getCurrentPosition:(ok,fail)=>fail({code:1})}})")
+            page.evaluate("()=>Object.defineProperty(navigator,'geolocation',{configurable:true,value:{getCurrentPosition:(ok,fail)=>fail({code:1}),watchPosition:(ok,fail)=>fail({code:1}),clearWatch:()=>{}}})")
             page.locator('#center-nearest').click();expect(page.locator('#center-status')).to_contain_text('거부')
             page.locator('#center-area').select_option('동탄9동');expect(page.locator('#center-result')).to_contain_text('동탄신리천로 9')
             # Safe text handling in input and zero-result official alternatives.

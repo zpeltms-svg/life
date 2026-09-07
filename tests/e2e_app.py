@@ -30,7 +30,12 @@ def install_mocks(page):
             value: {
               getCurrentPosition(success) {
                 success({coords:{latitude:37.17, longitude:127.10, accuracy:10}});
-              }
+              },
+              watchPosition(success) {
+                success({coords:{latitude:37.17, longitude:127.10, accuracy:10}});
+                return 1;
+              },
+              clearWatch() {}
             }
           });
           window.fetch = async (input, options = {}) => {

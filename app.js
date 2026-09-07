@@ -270,14 +270,42 @@ function openDetail(service) {
   dialog.showModal();
 }
 
-function getCurrentPosition() {
+// 한 번의 getCurrentPosition은 첫 (부정확한) 측정을 그대로 돌려주는 경우가 많아,
+// watchPosition으로 몇 초간 측정을 받아 가장 정확한 값을 사용한다.
+function getCurrentPosition({ goodAccuracy = 70, settleMs = 3500, timeoutMs = 15000 } = {}) {
   return new Promise((resolve, reject) => {
-    if (!navigator.geolocation) return reject(new Error('이 브라우저에서는 현재 위치를 지원하지 않습니다.'));
-    navigator.geolocation.getCurrentPosition(resolve, reject, {
-      enableHighAccuracy: true,
-      timeout: 15000,
-      maximumAge: 0,
-    });
+    const geo = navigator.geolocation;
+    if (!geo) return reject(new Error('이 브라우저에서는 현재 위치를 지원하지 않습니다.'));
+    let best = null, done = false, settleTimer = 0, hardTimer = 0, watchId = 0;
+    const stop = () => {
+      done = true;
+      window.clearTimeout(settleTimer);
+      window.clearTimeout(hardTimer);
+      try { geo.clearWatch(watchId); } catch (_) { /* noop */ }
+    };
+    const succeed = () => { if (!done) { stop(); resolve(best); } };
+    hardTimer = window.setTimeout(() => {
+      if (done) return;
+      stop();
+      if (best) resolve(best);
+      else reject(Object.assign(new Error('현재 위치 신호가 약합니다. 실외에서 잠시 후 다시 시도하거나 주소를 입력해 주세요.'), { code: 3 }));
+    }, timeoutMs);
+    watchId = geo.watchPosition(
+      (position) => {
+        if (done) return;
+        const accuracy = Number(position.coords.accuracy);
+        if (!best || (Number.isFinite(accuracy) && accuracy < Number(best.coords.accuracy))) best = position;
+        if (Number.isFinite(accuracy) && accuracy <= goodAccuracy) return succeed();
+        if (!settleTimer) settleTimer = window.setTimeout(succeed, settleMs);
+      },
+      (error) => {
+        if (done) return;
+        if (best && error && error.code !== 1) return; // 일시적 오류는 무시하고 최선값 유지
+        stop();
+        reject(error);
+      },
+      { enableHighAccuracy: true, timeout: timeoutMs, maximumAge: 0 }
+    );
   });
 }
 

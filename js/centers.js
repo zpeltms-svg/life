@@ -117,9 +117,10 @@ window.LifeNaviCenters = (() => {
         renderNearestList(output,list,coords);
         const accuracy=Number(coords?.accuracy);
         const accuracyLow=!(Number.isFinite(accuracy)&&accuracy>0&&accuracy<=MAX_LOCATION_ACCURACY_METERS);
+        const accDisplay=Number.isFinite(accuracy)&&accuracy>0?' (위치 정확도 약 ±'+Math.round(accuracy)+'m)':'';
         status.textContent=accuracyLow
-          ? '현재 위치에서 가까운 순서로 3곳입니다. 기기 위치가 부정확할 수 있으니 실제로 가까운 센터를 골라 길찾기하세요. 관할 판정은 아닙니다.'
-          : '현재 위치에서 가까운 순서로 3곳입니다. 관할센터 판정은 아닙니다.';
+          ? '현재 위치에서 가까운 순서로 3곳입니다'+accDisplay+'. 위치가 부정확할 수 있으니 실제로 가까운 센터를 골라 길찾기하세요. 관할 판정은 아닙니다.'
+          : '현재 위치에서 가까운 순서로 3곳입니다'+accDisplay+'. 관할센터 판정은 아닙니다.';
       } catch(error) {
         status.textContent=error.code===1?'위치 사용이 거부되었습니다. 주소를 입력하거나 읍·면·동을 직접 선택해 주세요.':(error.message || '위치를 확인하지 못했습니다. 주소를 입력해 주세요.');
       } finally {button.disabled=false;}
